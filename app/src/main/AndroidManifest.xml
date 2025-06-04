@@ -23,10 +23,47 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SubActivity02"/>
-        <activity android:name=".SubActivity03"/>
-        <service android:name=".service.MyService01"/>
-        <service android:name=".service.MyBindService"/>
+        <activity android:name=".SubActivity02" />
+        <activity android:name=".SubActivity03" />
+
+        <service android:name=".service.MyService01" />
+        <service android:name=".service.MyBindService" />
+
+        <receiver
+            android:name=".receiver.MyReceiver"
+            android:exported="false"
+            >
+            <intent-filter>
+                <action android:name="RULE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receiver.OrderReceiver01"
+            android:exported="false"
+            >
+            <intent-filter android:order="0">
+                <action android:name="RULE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receiver.OrderReceiver02"
+            android:exported="false"
+            >
+            <intent-filter android:order="1">
+                <action android:name="RULE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receiver.OrderReceiver03"
+            android:exported="false"
+            >
+            <intent-filter android:order="2">
+                <action android:name="RULE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

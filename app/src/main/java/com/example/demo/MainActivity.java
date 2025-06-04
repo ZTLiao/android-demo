@@ -1,8 +1,13 @@
 package com.example.demo;
 
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +17,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 
+import com.example.demo.receiver.MyReceiver;
+import com.example.demo.receiver.OrderReceiver01;
+import com.example.demo.receiver.OrderReceiver02;
+import com.example.demo.receiver.OrderReceiver03;
 import com.example.demo.service.MyService01;
 import com.example.demo.service.MyBindService;
 
@@ -24,6 +33,10 @@ public class MainActivity extends ComponentActivity {
     Button btn_startService, btn_stopService;
     
     Button btn_bindService, btn_unbindService;
+
+    Button btn_sendBroadcast, btn_sendOrderBroadcast;
+
+    MyBindService.MyBinder myBinder;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -71,14 +84,54 @@ public class MainActivity extends ComponentActivity {
             Intent intent = new Intent(MainActivity.this, MyService01.class);
             stopService(intent);
         });
+        ServiceConnection conn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                if (iBinder instanceof MyBindService.MyBinder) {
+                    myBinder = (MyBindService.MyBinder) iBinder;
+                }
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                Log.i(TAG, "onServiceDisconnected");
+            }
+        };
         btn_bindService = findViewById(R.id.btn_bindService);
         btn_bindService.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, MyBindService.class);
+            bindService(intent, conn, Context.BIND_AUTO_CREATE);
         });
         btn_unbindService = findViewById(R.id.btn_unbindService);
         btn_unbindService.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, MyBindService.class);
+            try {
+                unbindService(conn);
+            } catch (Exception e) {
+                Log.e(TAG, "unBindService", e);
+            }
         });
-
+        btn_sendBroadcast = findViewById(R.id.btn_broadcast);
+        btn_sendBroadcast.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, MyReceiver.class);
+            intent.setAction("RULE");
+            intent.putExtra("key2", "value2");
+            sendBroadcast(intent);
+        });
+        OrderReceiver01 orderReceiver01 = new OrderReceiver01();
+        OrderReceiver02 orderReceiver02 = new OrderReceiver02();
+        OrderReceiver03 orderReceiver03 = new OrderReceiver03();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("RULE");
+        registerReceiver(orderReceiver01, intentFilter);
+        registerReceiver(orderReceiver02, intentFilter);
+        registerReceiver(orderReceiver03, intentFilter);
+        btn_sendOrderBroadcast = findViewById(R.id.btn_orderBroadcast);
+        btn_sendOrderBroadcast.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setAction("RULE");
+            String data = "order broadcast";
+            Bundle extra = new Bundle();
+            sendOrderedBroadcast(intent, null, new MyReceiver(), null, 0, data, extra);
+        });
     }
 }

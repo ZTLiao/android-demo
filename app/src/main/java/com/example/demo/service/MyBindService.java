@@ -10,11 +10,17 @@ import androidx.annotation.Nullable;
 
 public class MyBindService extends Service {
 
-    static String TAG = MyBindService.class.getSimpleName();
+    String TAG = MyBindService.class.getSimpleName();
 
-    public static class MyBinder extends Binder {
+    private final MyBinder _myBinder = new MyBinder();
+
+    public class MyBinder extends Binder {
         public MyBinder() {
             Log.i(TAG, "MyBinder");
+        }
+
+        public MyBindService getServiceBinder() {
+            return MyBindService.this;
         }
     }
 
@@ -27,11 +33,12 @@ public class MyBindService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i(TAG, "onDestroy");
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return _myBinder;
     }
 }
