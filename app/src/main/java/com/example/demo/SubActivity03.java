@@ -21,6 +21,7 @@ public class SubActivity03 extends ComponentActivity {
             intent.setClass(SubActivity03.this, MainActivity.class);
             intent.putExtra("key1", "这是结果01，来自SubActivity03");
             setResult(234, intent);
+            SubActivity03.this.finish();
         });
     }
 }
