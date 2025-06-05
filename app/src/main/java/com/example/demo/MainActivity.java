@@ -2,10 +2,13 @@ package com.example.demo;
 
 
 import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -36,7 +39,11 @@ public class MainActivity extends ComponentActivity {
 
     Button btn_sendBroadcast, btn_sendOrderBroadcast;
 
+    Button btn_insert, btn_delete, btn_update, btn_query;
+
     MyBindService.MyBinder myBinder;
+
+    static final Uri uri = Uri.parse("content://com.example.db.authority/user");
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -133,5 +140,18 @@ public class MainActivity extends ComponentActivity {
             Bundle extra = new Bundle();
             sendOrderedBroadcast(intent, null, new MyReceiver(), null, 0, data, extra);
         });
+        btn_insert = findViewById(R.id.btn_insert);
+        btn_insert.setOnClickListener(v -> {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("uid", 3);
+            contentValues.put("name", "john");
+            contentValues.put("age", "20");
+            contentValues.put("score", "78");
+            ContentResolver contentResolver = getContentResolver();
+            contentResolver.insert(uri, contentValues);
+        });
+        btn_delete = findViewById(R.id.btn_delete);
+        btn_update = findViewById(R.id.btn_update);
+        btn_query = findViewById(R.id.btn_query);
     }
 }
