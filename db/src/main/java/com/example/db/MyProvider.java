@@ -43,7 +43,11 @@ public class MyProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+        String tableName = getTableName(uri);
+        if (TextUtils.isEmpty(tableName)) {
+            return null;
+        }
+        return db.query(tableName, strings, s, strings1, null, null, s1);
     }
 
     @Nullable

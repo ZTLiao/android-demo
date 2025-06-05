@@ -1,6 +1,7 @@
 package com.example.demo;
 
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -34,7 +36,7 @@ public class MainActivity extends ComponentActivity {
     Button btn_start, btn_startForResult;
 
     Button btn_startService, btn_stopService;
-    
+
     Button btn_bindService, btn_unbindService;
 
     Button btn_sendBroadcast, btn_sendOrderBroadcast;
@@ -56,7 +58,7 @@ public class MainActivity extends ComponentActivity {
             Log.i(MainActivity.class.getSimpleName(), ret);
         }
     }
-    
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,7 +153,37 @@ public class MainActivity extends ComponentActivity {
             contentResolver.insert(uri, contentValues);
         });
         btn_delete = findViewById(R.id.btn_delete);
+        btn_delete.setOnClickListener(v -> {
+            ContentResolver contentResolver = getContentResolver();
+            int count = contentResolver.delete(uri, "age < ?", new String[]{"18"});
+            if (count > 0) {
+                Log.i(TAG, "delete success");
+            }
+        });
         btn_update = findViewById(R.id.btn_update);
+        btn_update.setOnClickListener(v -> {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("age", "66");
+            ContentResolver contentResolver = getContentResolver();
+            int count = contentResolver.update(uri, contentValues, "age < ?", new String[]{"18"});
+            if (count > 0) {
+                Log.i(TAG, "update success");
+            }
+        });
         btn_query = findViewById(R.id.btn_query);
+        btn_query.setOnClickListener(v -> {
+            ContentResolver contentResolver = getContentResolver();
+            Cursor cursor = contentResolver.query(uri, new String[]{"uid", "name", "age", "score"}, "age < ?", new String[]{"17"}, null);
+            if (cursor == null) {
+                return;
+            }
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") int uid = cursor.getInt(cursor.getColumnIndex("uid"));
+                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex("name"));
+                @SuppressLint("Range") String age = cursor.getString(cursor.getColumnIndex("age"));
+                @SuppressLint("Range") String score = cursor.getString(cursor.getColumnIndex("score"));
+                Log.i(TAG, "uid : " + uid + ", name : " + name + ", age : " + age + ", score : " + score);
+            }
+        });
     }
 }
