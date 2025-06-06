@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -184,6 +185,15 @@ public class MainActivity extends ComponentActivity {
                 @SuppressLint("Range") String score = cursor.getString(cursor.getColumnIndex("score"));
                 Log.i(TAG, "uid : " + uid + ", name : " + name + ", age : " + age + ", score : " + score);
             }
+        });
+        TextView tv_downloadResult = findViewById(R.id.tv_downloadResult);
+        findViewById(R.id.btn_startDownload).setOnClickListener(v -> {
+            DownloadZip downloadZip = new DownloadZip(tv_downloadResult);
+            downloadZip.execute("https://res.dawalive.com/download/nvm-setup.zip");
+        });
+        findViewById(R.id.btn_startUnzip).setOnClickListener(v -> {
+            UnzipFile downloadZip = new UnzipFile(tv_downloadResult);
+            downloadZip.execute("");
         });
     }
 }
