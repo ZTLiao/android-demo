@@ -13,6 +13,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Parcel;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,9 +45,118 @@ public class MainActivity extends ComponentActivity {
 
     Button btn_insert, btn_delete, btn_update, btn_query;
 
+    TextView tv;
+
     MyBindService.MyBinder myBinder;
 
+    private MyHandler01 myHandler01;
+
+    TextView tv_client_view;
+
+    Button btn_bindServerService, btn_searchAge;
+
+    IBinder binder;
+
+    private static int REQUEST_CODE = 1000;
+
     static final Uri uri = Uri.parse("content://com.example.db.authority/user");
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        test01();
+        test02();
+        tv_client_view = findViewById(R.id.tv_client_view);
+        btn_bindServerService = findViewById(R.id.btn_bindServerService);
+        btn_searchAge = findViewById(R.id.btn_searchAge);
+        btn_bindServerService.setOnClickListener(v -> {
+            bindRemoteService();
+        });
+        btn_searchAge.setOnClickListener(v -> {
+            Log.i(TAG, "search age");
+            getRemoteAge("tom");
+        });
+    }
+
+    private void getRemoteAge(String name) {
+        Parcel data = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        data.writeString(name);
+        try {
+            if (binder == null) {
+                return;
+            }
+           binder.transact(REQUEST_CODE, data, reply, 0);
+            int age = reply.readInt();
+            tv_client_view.setText("search result : " + age);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            tv_client_view.setText(e.getMessage());
+        }
+    }
+
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            binder = iBinder;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
+
+    private void bindRemoteService() {
+        String action = "android.intent.action.server.student";
+        Intent intent = new Intent(action);
+        intent.setPackage("com.example.demo.server");
+        boolean bt = this.bindService(intent, serviceConnection, BIND_AUTO_CREATE);
+        Log.i(TAG, "bindRemoteService");
+    }
+
+    private void test02() {
+        myHandler01 = new MyHandler01(this);
+        SubThreadCreateHandler subThread = new SubThreadCreateHandler();
+        subThread.start();
+        findViewById(R.id.tv_async_view);
+        tv.setOnClickListener(v -> {
+            MyThread01 myThread01 = new MyThread01(myHandler01);
+            myThread01.start();
+            myHandler01.post(() -> {
+                for (int i = 0; i < 5; i++) {
+                    try {
+                        Thread.sleep(2 * 1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    updateUI01();
+                    updateUI02();
+                    updateUI03();
+                    tv.setText("i : " + i);
+                }
+            });
+            Message message = Message.obtain();
+            message.what = 99;
+            Bundle bundle = new Bundle();
+            bundle.putString("key1", "value1");
+            message.setData(bundle);
+            subThread.subHandler.sendMessage(message);
+        });
+    }
+
+    public void updateUI01() {
+        tv.setText("updateUI01");
+    }
+
+    public void updateUI02() {
+        tv.setText("updateUI02");
+    }
+
+    public void updateUI03() {
+        tv.setText("updateUI03");
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -59,10 +170,7 @@ public class MainActivity extends ComponentActivity {
         }
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    private void test01() {
         TextView tv = findViewById(R.id.sample_text);
         Button btn = findViewById(R.id.btn_test);
         btn.setText("按钮");
