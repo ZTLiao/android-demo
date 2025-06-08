@@ -24,6 +24,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 
+import com.example.demo.client.BindProxy;
+import com.example.demo.client.IStudentInterface;
 import com.example.demo.receiver.MyReceiver;
 import com.example.demo.receiver.OrderReceiver01;
 import com.example.demo.receiver.OrderReceiver02;
@@ -55,7 +57,7 @@ public class MainActivity extends ComponentActivity {
 
     Button btn_bindServerService, btn_searchAge;
 
-    IBinder binder;
+    IStudentInterface iStudentInterface;
 
     private static int REQUEST_CODE = 1000;
 
@@ -75,31 +77,14 @@ public class MainActivity extends ComponentActivity {
         });
         btn_searchAge.setOnClickListener(v -> {
             Log.i(TAG, "search age");
-            getRemoteAge("tom");
+            iStudentInterface.getStudentAge("tom");
         });
-    }
-
-    private void getRemoteAge(String name) {
-        Parcel data = Parcel.obtain();
-        Parcel reply = Parcel.obtain();
-        data.writeString(name);
-        try {
-            if (binder == null) {
-                return;
-            }
-           binder.transact(REQUEST_CODE, data, reply, 0);
-            int age = reply.readInt();
-            tv_client_view.setText("search result : " + age);
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-            tv_client_view.setText(e.getMessage());
-        }
     }
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            binder = iBinder;
+            iStudentInterface = BindProxy.asInterface(iBinder);
         }
 
         @Override
