@@ -12,4 +12,6 @@ interface IMyAidlInterface {
             double aDouble, String aString);
 
     int getStudentAge(String name);
+
+    void getMyStruct(inout Bundle bundle);
 }

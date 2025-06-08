@@ -32,6 +32,7 @@ import com.example.demo.receiver.MyReceiver;
 import com.example.demo.receiver.OrderReceiver01;
 import com.example.demo.receiver.OrderReceiver02;
 import com.example.demo.receiver.OrderReceiver03;
+import com.example.demo.server.MyStruct;
 import com.example.demo.service.MyService01;
 import com.example.demo.service.MyBindService;
 
@@ -81,6 +82,13 @@ public class MainActivity extends ComponentActivity {
             Log.i(TAG, "search age");
             try {
                 iMyAidlInterface.getStudentAge("tom");
+                MyStruct myStruct = new MyStruct(1, 2, 3, 4, "tom");
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("mystruct", myStruct);
+                iMyAidlInterface.getMyStruct(bundle);
+                bundle.setClassLoader(getClass().getClassLoader());
+                myStruct = bundle.getParcelable("mystruct");
+                Log.i(TAG, "myStruct : " + myStruct.toString());
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }

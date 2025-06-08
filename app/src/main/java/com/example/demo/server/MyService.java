@@ -2,6 +2,7 @@ package com.example.demo.server;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -24,6 +25,14 @@ public class MyService extends Service {
         public int getStudentAge(String name) throws RemoteException {
             Student student = new Student();
             return student.getAge(name);
+        }
+
+        @Override
+        public void getMyStruct(Bundle bundle) throws RemoteException {
+            Log.i(TAG, "getMyStruct");
+            bundle.setClassLoader(getClass().getClassLoader());
+            MyStruct myStruct = bundle.getParcelable("mystruct");
+            Log.i(TAG, "recv MyStruct : " + myStruct.toString());
         }
     };
 
