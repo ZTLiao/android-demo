@@ -42,7 +42,8 @@ public class DownloadZip extends AsyncTask<String, String, String> {
             if (!dir.exists()) {
                 dir.mkdir();
             }
-            String fullFilePath = dir + "/nvm-setup.zip";
+            String[] strArr = strings[0].split("/");
+            String fullFilePath = dir + "/" + strArr[strArr.length - 1];
             File file = new File(fullFilePath);
             if (!file.exists()) {
                 file.delete();

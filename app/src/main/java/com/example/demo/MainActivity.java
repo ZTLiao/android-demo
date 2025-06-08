@@ -12,9 +12,9 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Button;
@@ -26,7 +26,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 
 import com.example.demo.aidl.IMyAidlInterface;
-import com.example.demo.client.BindProxy;
 import com.example.demo.client.IStudentInterface;
 import com.example.demo.receiver.MyReceiver;
 import com.example.demo.receiver.OrderReceiver01;
@@ -35,6 +34,11 @@ import com.example.demo.receiver.OrderReceiver03;
 import com.example.demo.server.MyStruct;
 import com.example.demo.service.MyService01;
 import com.example.demo.service.MyBindService;
+
+import java.io.File;
+import java.lang.reflect.Method;
+
+import dalvik.system.DexClassLoader;
 
 public class MainActivity extends ComponentActivity {
 
@@ -72,6 +76,37 @@ public class MainActivity extends ComponentActivity {
         setContentView(R.layout.activity_main);
         test01();
         test02();
+        test03();
+        TextView tv_downloadResult = findViewById(R.id.tv_downloadResult);
+        findViewById(R.id.btn_startDownload).setOnClickListener(v -> {
+            DownloadZip downloadZip = new DownloadZip(tv_downloadResult);
+            downloadZip.execute("https://res.dawalive.com/download/test.jar");
+        });
+        findViewById(R.id.btn_startLoadJar).setOnClickListener(v -> {
+            loadJar();
+        });
+    }
+
+    private void loadJar() {
+        File saveDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS + "/" + "zipSaveDir" + "/");
+        String savePath = saveDir + "/test.jar";
+        File tempDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS + "/" + "jarTempDir" + "/");
+        if (!tempDir.exists()) {
+            tempDir.mkdir();
+        }
+        DexClassLoader loader = new DexClassLoader(savePath, tempDir.getAbsolutePath(), null, this.getClass().getClassLoader());
+        try {
+            Class<?> clazz = loader.loadClass("com.example.mylibrary1.OneClass");
+            Object oneClass = clazz.newInstance();
+            Method method = clazz.getMethod("add", int.class, int.class);
+            Object ret = method.invoke(oneClass, 1, 2);
+            Log.i(TAG, "ret : " + ret);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
+    private void test03() {
         tv_client_view = findViewById(R.id.tv_client_view);
         btn_bindServerService = findViewById(R.id.btn_bindServerService);
         btn_searchAge = findViewById(R.id.btn_searchAge);
