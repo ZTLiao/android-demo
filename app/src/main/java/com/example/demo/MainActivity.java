@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Parcel;
+import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 
+import com.example.demo.aidl.IMyAidlInterface;
 import com.example.demo.client.BindProxy;
 import com.example.demo.client.IStudentInterface;
 import com.example.demo.receiver.MyReceiver;
@@ -59,7 +61,7 @@ public class MainActivity extends ComponentActivity {
 
     IStudentInterface iStudentInterface;
 
-    private static int REQUEST_CODE = 1000;
+    IMyAidlInterface iMyAidlInterface;
 
     static final Uri uri = Uri.parse("content://com.example.db.authority/user");
 
@@ -77,19 +79,24 @@ public class MainActivity extends ComponentActivity {
         });
         btn_searchAge.setOnClickListener(v -> {
             Log.i(TAG, "search age");
-            iStudentInterface.getStudentAge("tom");
+            try {
+                iMyAidlInterface.getStudentAge("tom");
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            iStudentInterface = BindProxy.asInterface(iBinder);
+//            iStudentInterface = BindProxy.asInterface(iBinder);
+            iMyAidlInterface = IMyAidlInterface.Stub.asInterface(iBinder);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-
+            iMyAidlInterface = null;
         }
     };
 

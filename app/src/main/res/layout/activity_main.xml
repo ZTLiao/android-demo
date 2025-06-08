@@ -138,10 +138,6 @@
             android:text="------"
             android:textSize="40dp"
             android:id="@+id/tv_downloadResult"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             />
 
         <Button
@@ -163,10 +159,6 @@
             android:text="hello wolrd"
             android:textSize="40dp"
             android:id="@+id/tv_async_view"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             />
 
     </LinearLayout>
@@ -182,10 +174,6 @@
             android:text="hello wolrd"
             android:textSize="30sp"
             android:id="@+id/tv_client_view"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             />
         <Button
             android:layout_width="match_parent"
