@@ -89,8 +89,12 @@ public class MainActivity extends AppCompatActivity {
             fun2();
             fun3();
             Log.i(TAG, "callJavaFunFromJNI ret : " + callJavaFunFromJNI(one));
+            Log.i(TAG, "callStaticJavaFunFromJNI ret : " + callStaticJavaFunFromJNI());
             test01();
         });
+        Log.i(TAG, this.getPackageName());
+        Log.i(TAG, getApplicationContext().getPackageName());
+        Log.i(TAG, getPackageNameFromJNI());
     }
 
     private void test01() {
@@ -131,5 +135,9 @@ public class MainActivity extends AppCompatActivity {
     public native String readSDCardFile(String filePath);
 
     public native int callJavaFunFromJNI(Student param);
+
+    public native String callStaticJavaFunFromJNI();
+
+    public native String getPackageNameFromJNI();
 
 }

@@ -48,4 +48,28 @@ Java_com_example_ndk_MainActivity_callJavaFunFromJNI(JNIEnv *env, jobject thiz, 
     jobject jobject_ret = env->CallObjectMethod(param, jmethodId_study, flag);
     const char *t = env->GetStringUTFChars((jstring) jobject_ret, 0);
     LOGI("ndk call study ret : %s", t);
+    return flag;
+}
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_ndk_MainActivity_callStaticJavaFunFromJNI(JNIEnv *env, jobject thiz) {
+    jclass jclass_strudent_2 = env->FindClass("com/example/ndk/Student");
+    jmethodID jmethodId = env->GetStaticMethodID(jclass_strudent_2, "calcLength", "(Ljava/lang/String;)I");
+    jstring jstring1 = env->NewStringUTF("hahaha");
+    jint jint_ret = env->CallStaticIntMethod(jclass_strudent_2, jmethodId, jstring1);
+    LOGI("ndk call calcLength ret : %d", jint_ret);
+    return jstring1;
+}
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_ndk_MainActivity_getPackageNameFromJNI(JNIEnv *env, jobject thiz) {
+    jclass cls_activity_thread = env->FindClass("android/app/ActivityThread");
+    jmethodID jmethodId = env->GetStaticMethodID(cls_activity_thread, "currentActivityThread", "()Landroid/app/ActivityThread;");
+    jobject jobj = env->CallStaticObjectMethod(cls_activity_thread, jmethodId);
+    jmethodID jmethodId_getApplication = env->GetMethodID(cls_activity_thread, "getApplication", "()Landroid/app/Application;");
+    jobject ins_mintialApplication = env->CallObjectMethod(jobj, jmethodId_getApplication);
+    jclass cls_Application = env->GetObjectClass(ins_mintialApplication);
+    jmethodID  jmethodId_getPackageName = env->GetMethodID(cls_Application, "getPackageName", "()Ljava.lang.String;");
+    jstring pkgName = (jstring) env->CallObjectMethod(ins_mintialApplication, jmethodId_getPackageName);
+    return pkgName;
 }
