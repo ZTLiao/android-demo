@@ -12,11 +12,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
 public class MainActivity extends AppCompatActivity {
 
     private final static int MY_PERMISSION_REQUEST_WRITE_CODE = 11;
 
     String TAG = this.getClass().getSimpleName();
+
+    Student one = new Student("tom", 34);
 
     static {
         System.loadLibrary("ndk");
@@ -26,33 +31,86 @@ public class MainActivity extends AppCompatActivity {
         return 1;
     }
 
+    public void fun1() {
+        try {
+            Class<?> clazz = Class.forName("com.example.ndk.Student");
+            Method[] declaredMethods = clazz.getDeclaredMethods();
+            for (Method method : declaredMethods) {
+                String methodName = method.getName();
+                String returnType = method.getReturnType().getSimpleName();
+                Log.i(TAG, "methodName : " + methodName + "," + returnType);
+            }
+            for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
+                String methodName = constructor.getName();
+                String returnType = constructor.toGenericString();
+                Log.i(TAG, "constructor : " + methodName + "," + returnType);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void fun2() {
+        try {
+            Class<?> clazz = com.example.ndk.Student.class;
+            Constructor<?> constructor = clazz.getConstructor(String.class, int.class);
+            Object obj = constructor.newInstance("tom", 25);
+            Method method = clazz.getMethod("study", int.class);
+            Object invoke = method.invoke(obj, 1);
+            Log.i(TAG, "study ret : " + invoke);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void fun3() {
+        try {
+            Class<? extends Student> clazz = one.getClass();
+            Method method = clazz.getDeclaredMethod("getAge");
+            method.setAccessible(true);
+            Object obj = method.invoke(one);
+            Log.i(TAG, "fun3 obj : " + obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        one.study(1);
         testFun("aa", 4.5, 5);
         TextView tv = findViewById(R.id.tv_simpleText);
         tv.setText(stringFromJNI());
         tv.setOnClickListener(v -> {
-            int ret = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            if (ret == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "grant permission");
-                String fc = readSDCardFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
-                Log.i(TAG, "fc : " + fc);
-            } else {
-                Log.i(TAG, "not permission");
-                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST_WRITE_CODE);
-            }
+            fun1();
+            fun2();
+            fun3();
+            Log.i(TAG, "callJavaFunFromJNI ret : " + callJavaFunFromJNI(one));
+            test01();
         });
+    }
+
+    private void test01() {
+        int ret = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (ret == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "grant permission");
+            String fc = readSDCardFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/b.txt");
+            Log.i(TAG, "fc : " + fc);
+        } else {
+            Log.i(TAG, "not permission");
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_REQUEST_WRITE_CODE);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults, int deviceId) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId);
-        switch(requestCode) {
-            case MY_PERMISSION_REQUEST_WRITE_CODE:
-            {
-                if (grantResults.length > 0) {
+        switch (requestCode) {
+            case MY_PERMISSION_REQUEST_WRITE_CODE: {
+                if (grantResults.length > 0 && grantResults[0] != -1) {
                     Log.i(TAG, "write sd card permission success");
                 } else {
                     Log.i(TAG, "write sd card permission fail");
@@ -71,5 +129,7 @@ public class MainActivity extends AppCompatActivity {
     public native int getLength(String str);
 
     public native String readSDCardFile(String filePath);
+
+    public native int callJavaFunFromJNI(Student param);
 
 }
