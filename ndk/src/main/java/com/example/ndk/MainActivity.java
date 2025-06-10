@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,10 +23,50 @@ public class MainActivity extends AppCompatActivity {
 
     String TAG = this.getClass().getSimpleName();
 
+    TextView tv;
+
     Student one = new Student("tom", 34);
+
+    MyHandler myHandler;
+
+    List<String> al;
+
+    String fp;
 
     static {
         System.loadLibrary("ndk");
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        test02();
+        myHandler = new MyHandler(this);
+        al = new ArrayList<>();
+        tv = findViewById(R.id.tv_simpleText);
+        findViewById(R.id.btn_start).setOnClickListener(v -> {
+            tv.setText("");
+            al.clear();
+            String tempPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+            new MyThread(myHandler, tempPath).start();
+        });
+    }
+
+    public void updateUI01(String fp) {
+        fp = fp.replace(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), "");
+        if (al.size() < 20) {
+            al.add(fp);
+        } else {
+            al.remove(0);
+            al.add(fp);
+        }
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < al.size(); i++) {
+            sb.append(al.get(i) + "\r\n");
+        }
+        tv.setText(sb.toString());
     }
 
     public int testFun(String a, double b, long c) {
@@ -75,11 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    private void test02() {
         one.study(1);
         testFun("aa", 4.5, 5);
         TextView tv = findViewById(R.id.tv_simpleText);
@@ -90,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
             fun3();
             Log.i(TAG, "callJavaFunFromJNI ret : " + callJavaFunFromJNI(one));
             Log.i(TAG, "callStaticJavaFunFromJNI ret : " + callStaticJavaFunFromJNI());
+            Log.i(TAG, "getPackageNameFromJNI ret : " + getPackageNameFromJNI());
+            Log.i(TAG, "getPackageNameFromJNI2 ret : " + getPackageNameFromJNI2());
             test01();
         });
         Log.i(TAG, this.getPackageName());
@@ -139,5 +179,7 @@ public class MainActivity extends AppCompatActivity {
     public native String callStaticJavaFunFromJNI();
 
     public native String getPackageNameFromJNI();
+
+    public native String getPackageNameFromJNI2();
 
 }

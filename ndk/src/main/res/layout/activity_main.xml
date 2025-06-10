@@ -5,13 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".MainActivity">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:id="@+id/btn_start"
+        android:text="遍历SDCard的Download目录" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="hello wolrd"
-        android:textSize="30sp"
+        android:layout_height="match_parent"
+        android:text="hello world"
         android:id="@+id/tv_simpleText"
         />
+
 </LinearLayout>

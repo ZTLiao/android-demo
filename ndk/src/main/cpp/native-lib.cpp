@@ -73,3 +73,27 @@ Java_com_example_ndk_MainActivity_getPackageNameFromJNI(JNIEnv *env, jobject thi
     jstring pkgName = (jstring) env->CallObjectMethod(ins_mintialApplication, jmethodId_getPackageName);
     return pkgName;
 }
+
+jstring getPackageName(JNIEnv *env, jobject thiz) {
+    jclass cls_activity_thread = env->FindClass("android/app/ActivityThread");
+    jmethodID jmethodId = env->GetStaticMethodID(cls_activity_thread, "currentActivityThread", "()Landroid/app/ActivityThread;");
+    jobject jobj = env->CallStaticObjectMethod(cls_activity_thread, jmethodId);
+    jmethodID jmethodId_getApplication = env->GetMethodID(cls_activity_thread, "getApplication", "()Landroid/app/Application;");
+    jobject ins_mintialApplication = env->CallObjectMethod(jobj, jmethodId_getApplication);
+    jclass cls_Application = env->GetObjectClass(ins_mintialApplication);
+    jmethodID  jmethodId_getPackageName = env->GetMethodID(cls_Application, "getPackageName", "()Ljava.lang.String;");
+    jstring pkgName = (jstring) env->CallObjectMethod(ins_mintialApplication, jmethodId_getPackageName);
+    jstring ret = env->NewStringUTF("getPackageName !!!");
+    return ret;
+}
+
+jint JNI_OnLoad(JavaVM* vm, void* reserved) {
+    JNIEnv* env = NULL;
+    jint result = -1;
+    vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_4);
+    jclass cls_MainActivity = env->FindClass("com/example/ndk/MainActivity");
+    JNINativeMethod  methods[] = {{"getPackageNameFromJNI2", "()Ljava/lang/String;", (void *) getPackageName}};
+    env->RegisterNatives(cls_MainActivity, methods, sizeof(methods) / sizeof(JNINativeMethod));
+    result = JNI_VERSION_1_4;
+    return result;
+}
