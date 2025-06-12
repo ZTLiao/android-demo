@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
             al.clear();
             String tempPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
             new MyThread(myHandler, tempPath).start();
+            walkDir(tempPath, myHandler);
+            walkDir2(tempPath, myHandler);
         });
     }
 
@@ -181,5 +183,9 @@ public class MainActivity extends AppCompatActivity {
     public native String getPackageNameFromJNI();
 
     public native String getPackageNameFromJNI2();
+
+    public native void walkDir(String path, MyHandler myHandler);
+
+    public native void walkDir2(String path, MyHandler myHandler);
 
 }

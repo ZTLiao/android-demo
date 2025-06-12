@@ -5,6 +5,7 @@ import android.os.Message;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class MyThread extends Thread {
@@ -39,7 +40,7 @@ public class MyThread extends Thread {
         }
     }
 
-    public void getFiles2(String path) {
+    public void getFiles2(Object path) {
         try {
             Class cls_File = Class.forName("java.io.File");
             Constructor constructor = cls_File.getConstructor(String.class);
@@ -57,6 +58,30 @@ public class MyThread extends Thread {
             for (Object one : files) {
                 Object obj_one_path = method_getAbsolutePath.invoke(one);
                 Object obj_isfile = method_isFile.invoke(one);
+                if ((boolean) obj_isfile) {
+                    Class cls_Message = Class.forName("android.os.Message");
+                    Method method_obtain = cls_Message.getMethod("obtain");
+                    Object ins_message = method_obtain.invoke(cls_Message);
+                    Field field_what = cls_Message.getField("what");
+                    field_what.set(ins_message, 1);
+
+                    Class<?> cls_Bundle = Class.forName("android.os.Bundle");
+                    Constructor<?> constructor_Bundle = cls_Bundle.getConstructor();
+                    Object ins_Bundle = constructor_Bundle.newInstance();
+                    Method method_putString = cls_Bundle.getMethod("putString", cls_String, cls_String);
+                    method_putString.invoke(ins_Bundle, "fp", obj_one_path);
+
+                    Method method_setData = cls_Message.getMethod("setData", cls_Bundle);
+                    method_setData.invoke(ins_message, ins_Bundle);
+
+                    myHandler.sendMessage((Message) ins_message);
+                    try {
+                        Thread.sleep(100);
+                    } catch (Exception ignored) {
+                    }
+                } else if (!(boolean) (method_contains.invoke(obj_one_path, ".thumnail"))) {
+                    getFiles2(obj_one_path);
+                }
             }
         } catch (Exception ignored) {
 
