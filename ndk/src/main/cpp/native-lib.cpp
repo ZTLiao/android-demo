@@ -24,7 +24,7 @@ extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_example_ndk_MainActivity_readSDCardFile(JNIEnv *env, jobject thiz, jstring file_path) {
     jstring jstring_ret = env->NewStringUTF("null");
-    const char *temp = env->GetStringUTFChars(jstring_ret);
+    const char *temp = env->GetStringUTFChars(jstring_ret,0);
     char *filePath = (char *) env->GetStringChars(file_path, 0);
     FILE *fp;
     fp = fopen(filePath, "r");
@@ -117,7 +117,7 @@ static void sleep_ms(unsigned int secs) {
     struct timeval tval;
     tval.tv_sec = secs / 1000;
     tval.tv_usec = (secs * 100) * 1000000;
-    select (0, NULL, NULL, NULL, &tvtall);
+    select (0, NULL, NULL, NULL, &tval);
 }
 
 void *doWork(void *args) {
@@ -249,7 +249,7 @@ void *doWork2(void *args) {
             jmethodID method_putString = env->GetMethodID(cls_bundle, "putString", "(Ljava/lang/String;Ljava/lang/String;)V");
             jstring jstr_key = env->NewStringUTF("fp");
 
-            env->CallVoidMethod(ins_bundle, method_putString, jstr_key, tDir);
+            env->CallVoidMethod(ins_bundle, method_putString, jstr_key, jstring_fpath);
 
             jmethodID method_setData = env->GetMethodID(cls, "setData", "(Landroid/os/Bundle;)V");
             env->CallVoidMethod(ins_Message, method_setData, ins_bundle);
