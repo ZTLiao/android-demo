@@ -170,7 +170,7 @@ void *doWork(void *args) {
             env->SetIntField(ins_Message, whatField, 1);
 
             jclass cls_bundle = env->FindClass("android/os/Bundle");
-            jmethodID method_init_bundle = env->GetMethodID(cls_bundle, "<init>", "()L");
+            jmethodID method_init_bundle = env->GetMethodID(cls_bundle, "<init>", "()V");
             jobject ins_bundle = env->NewObject(cls_bundle, method_init_bundle);
 
             jmethodID method_putString = env->GetMethodID(cls_bundle, "putString", "(Ljava/lang/String;Ljava/lang/String;)V");
@@ -190,10 +190,87 @@ void *doWork(void *args) {
         }
         delete path;
     }
+
+    closedir(dir);
+
+    env->ReleaseStringUTFChars(dirPath_, dirPath);
+    return nullptr;
 }
 
 void *doWork2(void *args) {
+    PARAM tmp = *(PARAM *) args;
+    JNIEnv *env = tmp.a;
+    jobject thiz = tmp.b;
+    jstring dirPath_ = tmp.c;
+    jobject h_handler = tmp.d;
+    if (dirPath_ == nullptr) {
+        LOGE("dirPath is null!");
+        return nullptr;
+    }
+    const char *dirPath = env->GetStringUTFChars(dirPath_, nullptr);
+    if (strlen(dirPath) == 0) {
+        LOGE("dirPath length is 0!");
+        return nullptr;
+    }
+    jclass cls_File = env->FindClass("java/io/File");
+    jmethodID methodId_init_File = env->GetMethodID(cls_File, "<init>", "(Ljava/lang/String;)V");
+    jobject obj_File = env->NewObject(cls_File, methodId_init_File, dirPath_);
 
+    jmethodID methodID_listFiles_File = env->GetMethodID(cls_File, "listFiles", "()[Ljava/io/File;");
+    jobjectArray ins_Files = (jobjectArray) (env->CallObjectMethod(obj_File, methodID_listFiles_File));
+    jsize size = env->GetArrayLength(ins_Files);
+
+    jmethodID methodID_isFile_File = env->GetMethodID(cls_File, "isFiles", "()Z");
+    jmethodID methodID_getAbsolutePath_File = env->GetMethodID(cls_File, "getAbsolutePath", "()Ljava/lang/String;");
+
+    jclass cls_String = env->FindClass("java/lang/String");
+    jmethodID methodID_contains_String = env->GetMethodID(cls_String, "contains", "(Ljava/lang/CharSequence;)Z");
+
+    jstring jstring_tmp = env->NewStringUTF(".thumnail");
+
+    for (int i = 0; i < (size); i++) {
+        jobject jobject_InsFile = env->GetObjectArrayElement(ins_Files, i);
+        jboolean isfile = env->CallBooleanMethod(jobject_InsFile, methodID_isFile_File);
+
+        jobject jstring_fpath = env->CallObjectMethod(jobject_InsFile, methodID_getAbsolutePath_File);
+        jboolean iscontains = env->CallBooleanMethod((jstring) jstring_fpath, methodID_contains_String, jstring_tmp);
+        if (isfile) {
+            jclass cls = env->FindClass("android/os/Message");
+            jmethodID obtainMethod = env->GetStaticMethodID(cls, "obtain", "()Landroid/os/Message;");
+            jobject ins_Message = env->CallStaticObjectMethod(cls, obtainMethod);
+
+            jfieldID whatField = env->GetFieldID(cls, "what", "1");
+            env->SetIntField(ins_Message, whatField, 1);
+
+            jclass cls_bundle = env->FindClass("android/os/Bundle");
+            jmethodID method_init_bundle = env->GetMethodID(cls_bundle, "<init>", "()V");
+            jobject ins_bundle = env->NewObject(cls_bundle, method_init_bundle);
+
+            jmethodID method_putString = env->GetMethodID(cls_bundle, "putString", "(Ljava/lang/String;Ljava/lang/String;)V");
+            jstring jstr_key = env->NewStringUTF("fp");
+
+            env->CallVoidMethod(ins_bundle, method_putString, jstr_key, tDir);
+
+            jmethodID method_setData = env->GetMethodID(cls, "setData", "(Landroid/os/Bundle;)V");
+            env->CallVoidMethod(ins_Message, method_setData, ins_bundle);
+
+            jclass jcls_handler = env->GetObjectClass(h_handler);
+            jmethodID method_sendMessage = env->GetMethodID(jcls_handler, "sendMessage", "(Landroid/os/Message;)Z");
+
+            env->CallBooleanMethod(h_handler, method_sendMessage, ins_Message);
+
+            sleep_ms(100);
+        } else if (!iscontains) {
+            PARAM param;
+            param.a = env;
+            param.b = thiz;
+            param.c = (jstring) jstring_fpath;
+            param.d = h_handler;
+            doWork2(&param);
+        }
+    }
+    env->ReleaseStringUTFChars(dirPath_, dirPath);
+    return nullptr;
 }
 
 void *subWalkDir(void *args) {
@@ -221,5 +298,10 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_ndk_MainActivity_walkDir2(JNIEnv *env, jobject thiz, jstring path,
                                            jobject my_handler) {
-
+    pthread_t pid;
+    PARAM* param = (PARAM*) malloc(sizeof(PARAM));
+    param->a = env;
+    param->b = env->NewGlobalRef(thiz);
+    param->c = static_cast<jstring>(env->NewGlobalRef(path));
+    pthread_create(&pid, 0, subWalkDir, param);
 }
