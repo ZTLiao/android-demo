@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,9 @@ import com.example.demo.service.MyService01;
 import com.example.demo.service.MyBindService;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 
 import dalvik.system.DexClassLoader;
@@ -77,6 +81,37 @@ public class MainActivity extends ComponentActivity {
         test01();
         test02();
         test03();
+        test04();
+        findViewById(R.id.btn_startDownload).setOnClickListener(v -> {
+            AssetManager assetManager = MainActivity.this.getAssets();
+            try {
+                InputStream in = assetManager.open("test2.jar");
+                File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/" + "javaSaveDirs");
+                if (!dir.exists()) {
+                    dir.mkdir();
+                }
+                String fullFilePath = dir + "/" + "test2.jar";
+                File jar = new File(fullFilePath);
+                if (jar.exists()) {
+                    jar.delete();
+                }
+                jar.createNewFile();
+                FileOutputStream fos = new FileOutputStream(jar.getAbsolutePath(), false);
+                byte[] buff = new byte[1024];
+                int len = 0;
+                while ((len = in.read(buff)) > 0) {
+                    fos.write(buff, 0, len);
+                }
+                fos.flush();
+                fos.close();
+                in.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private void test04() {
         TextView tv_downloadResult = findViewById(R.id.tv_downloadResult);
         findViewById(R.id.btn_startDownload).setOnClickListener(v -> {
             DownloadZip downloadZip = new DownloadZip(tv_downloadResult);
