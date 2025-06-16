@@ -11,45 +11,45 @@ import java.util.Map;
 public class DexType {
 
     public DexHeader dexHeader;
-    public ArrayList<DexStringId> dexStringId; //�����ַ���ƫ�ƴ洢
-    public ArrayList<String > dexStringList;//�����ַ���
-    public ArrayList<DexTypeId> dexTypeId;//����dexTypeID
-    public ArrayList<String > dexTypeList;//����type
-    public ArrayList<DexProtoId> dexProtoId;//����dexProtoID
-    public ArrayList<String > dexProtoIdString;
-    public ArrayList<String > dexProtoIdType;
+    public ArrayList<DexStringId> dexStringId; //所有字符串偏移存储
+    public ArrayList<String> dexStringList;//所有字符串
+    public ArrayList<DexTypeId> dexTypeId;//所有dexTypeID
+    public ArrayList<String> dexTypeList;//所有type
+    public ArrayList<DexProtoId> dexProtoId;//所有dexProtoID
+    public ArrayList<String> dexProtoIdString;
+    public ArrayList<String> dexProtoIdType;
     public ArrayList<DexTypeList> dexTypeLists;
-    public ArrayList<String > dexProtoList;
+    public ArrayList<String> dexProtoList;
     public ArrayList<DexFieldId> dexFieldId;
-    public ArrayList<String > dexFieldList;
+    public ArrayList<String> dexFieldList;
     public ArrayList<DexMethodId> dexMethodId;
-    public ArrayList<String > dexMethodList;
+    public ArrayList<String> dexMethodList;
     public ArrayList<DexClassDef> dexClassDefs;
     public ArrayList<DexClassData> dexClassData;
     public DexMapList dexMapLists;
 
 
-    //���캯��
-    DexType(){
+    //构造函数
+    DexType() {
         dexHeader = new DexHeader();
 
         dexStringId = new ArrayList<DexStringId>();
-        dexStringList = new ArrayList<String >();
+        dexStringList = new ArrayList<String>();
 
-        dexTypeId =  new ArrayList<DexTypeId >();
-        dexTypeList = new ArrayList<String >();
+        dexTypeId = new ArrayList<DexTypeId>();
+        dexTypeList = new ArrayList<String>();
         dexTypeLists = new ArrayList<DexTypeList>();
 
         dexProtoId = new ArrayList<DexProtoId>();
-        dexProtoIdString = new ArrayList<String >();
-        dexProtoIdType = new ArrayList<String >();
-        dexProtoList = new ArrayList<String >();
+        dexProtoIdString = new ArrayList<String>();
+        dexProtoIdType = new ArrayList<String>();
+        dexProtoList = new ArrayList<String>();
 
         dexFieldId = new ArrayList<DexFieldId>();
-        dexFieldList = new ArrayList<String >();
+        dexFieldList = new ArrayList<String>();
 
         dexMethodId = new ArrayList<DexMethodId>();
-        dexMethodList = new ArrayList<String >();
+        dexMethodList = new ArrayList<String>();
 
         dexClassDefs = new ArrayList<DexClassDef>();
         dexClassData = new ArrayList<DexClassData>();
@@ -59,43 +59,43 @@ public class DexType {
 
     /**
      * typedef struct DexHeader{
-     *     u1 magic[8];                   //dex�汾��ʶ8��1�ֽ�
-     *     u4 checksum;                   //adler32У��1��4�ֽ�
-     *     u1 signature[kSHA1DigestLen];  //SHA-1��ϣֵ
-     *     u4 fileSize;                   //�����ļ��Ĵ�С
-     *     u4 headerSize;                 //DexHeader�Ľṹ��С
-     *     u4 endianTag;                  //�ֽ�����
-     *     u4 linkSize;                   //���Ӷδ�С
-     *     u4 linkOff;                    //���Ӷ�ƫ��
-     *     u4 mapOff;                     //DexMapList���ļ�ƫ��
-     *     u4 stringIdsSize;              //DexStringId�ĸ���
-     *     u4 stringIdsOff;               //DexStringId���ļ�ƫ��
-     *     u4 typeIdsSize;                //DexTupeID�ĸ���
-     *     u4 typeIdsOff;                 //DexTypeId���ļ�ƫ��
-     *     u4 protoIdsSize;               //DexProtoId�ĸ���
-     *     u4 protoIdsOff;                //DexProtoId���ļ�ƫ��
-     *     u4 fieldIdsSize;               //DexFieldId�ĸ���
-     *     u4 fieldIdsOff;                //DexFieldId���ļ�ƫ��
-     *     u4 methodIdsSize;              //DexMethodId�ĸ���
-     *     u4 methodIdsOff;               //DexMethodID���ļ�ƫ��
-     *     u4 classDefsSize;              //DexClassDef�ĸ���
-     *     u4 classDefsOff;               //DexClassDef���ļ�ƫ��
-     *     u4 dataSize;                   //���ݶεĴ�С
-     *     u4 dataOff;                    //���ݶε��ļ�ƫ��
+     * u1 magic[8];                   //dex版本标识8个1字节
+     * u4 checksum;                   //adler32校验1个4字节
+     * u1 signature[kSHA1DigestLen];  //SHA-1哈希值
+     * u4 fileSize;                   //整个文件的大小
+     * u4 headerSize;                 //DexHeader的结构大小
+     * u4 endianTag;                  //字节序标记
+     * u4 linkSize;                   //链接段大小
+     * u4 linkOff;                    //链接段偏移
+     * u4 mapOff;                     //DexMapList的文件偏移
+     * u4 stringIdsSize;              //DexStringId的个数
+     * u4 stringIdsOff;               //DexStringId的文件偏移
+     * u4 typeIdsSize;                //DexTupeID的个数
+     * u4 typeIdsOff;                 //DexTypeId的文件偏移
+     * u4 protoIdsSize;               //DexProtoId的个数
+     * u4 protoIdsOff;                //DexProtoId的文件偏移
+     * u4 fieldIdsSize;               //DexFieldId的个数
+     * u4 fieldIdsOff;                //DexFieldId的文件偏移
+     * u4 methodIdsSize;              //DexMethodId的个数
+     * u4 methodIdsOff;               //DexMethodID的文件偏移
+     * u4 classDefsSize;              //DexClassDef的个数
+     * u4 classDefsOff;               //DexClassDef的文件偏移
+     * u4 dataSize;                   //数据段的大小
+     * u4 dataOff;                    //数据段的文件偏移
      * }
      */
-    public class DexHeader{
-        public byte[] magic = new byte[8];          //dex�汾��ʶ
-        public byte[] checksum = new byte[4];       //adler32У��
-        public byte[] signature = new byte[20];     //sha-1��ϣֵ
-        public byte[] fileSize = new byte[4];       //�����ļ��Ĵ�С
-        public byte[] headerSize = new byte[4];     //DexHeader�ṹ��С
-        public byte[] endianTag = new byte[4];      //��С��
-        public byte[] linkSize = new byte[4];       //���Ӷδ�С
-        public byte[] linkOff = new byte[4];       //���Ӷ�ƫ��
-        public byte[] mapOff = new byte[4];       //DexMapList���ļ�ƫ��
-        public byte[] stringIdsSize = new byte[4];       //DexStringId�ĸ���
-        public byte[] stringIdsOff = new byte[4];       //DexStringId���ļ�ƫ��
+    public class DexHeader {
+        public byte[] magic = new byte[8];          //dex版本标识
+        public byte[] checksum = new byte[4];       //adler32校验
+        public byte[] signature = new byte[20];     //sha-1哈希值
+        public byte[] fileSize = new byte[4];       //整个文件的大小
+        public byte[] headerSize = new byte[4];     //DexHeader结构大小
+        public byte[] endianTag = new byte[4];      //大小端
+        public byte[] linkSize = new byte[4];       //链接段大小
+        public byte[] linkOff = new byte[4];       //链接段偏移
+        public byte[] mapOff = new byte[4];       //DexMapList的文件偏移
+        public byte[] stringIdsSize = new byte[4];       //DexStringId的个数
+        public byte[] stringIdsOff = new byte[4];       //DexStringId的文件偏移
         public byte[] typeIdsSize = new byte[4];       //
         public byte[] typeIdsOff = new byte[4];       //
         public byte[] protoIdsSize = new byte[4];       //
@@ -140,116 +140,116 @@ public class DexType {
 
     /**
      * typedef struct DexStringId{
-     *      u4 stringDataOff;
+     * u4 stringDataOff;
      * }
      */
-    public class DexStringId{
-        public byte[] stringDataOff= new byte[4];
+    public class DexStringId {
+        public byte[] stringDataOff = new byte[4];
     }
 
     /**
      * typedef struct DexTypeId{
-     *     u4 descriptorIdx;
+     * u4 descriptorIdx;
      * }
      */
-    public class DexTypeId{
-        public byte[] descriptorIdx=new byte[4];
+    public class DexTypeId {
+        public byte[] descriptorIdx = new byte[4];
     }
 
     /**
      * typedef struct DexProtoId{
-     *     u4 shortyIdx;
-     *     u4 returnTypeIdx;
-     *     u4 parametersOff;
+     * u4 shortyIdx;
+     * u4 returnTypeIdx;
+     * u4 parametersOff;
      * }
      */
-    public class DexProtoId{
-        public byte[] shortyIdx=new byte[4];
-        public byte[] returnTypeIdx=new byte[4];
-        public byte[] parametersOff=new byte[4];
+    public class DexProtoId {
+        public byte[] shortyIdx = new byte[4];
+        public byte[] returnTypeIdx = new byte[4];
+        public byte[] parametersOff = new byte[4];
         public List<DexTypeItem> dexTypeItemList = new ArrayList<>();
     }
 
     /**
      * typedef struct DexTypeItem{
-     *     u2 typeIdx;
+     * u2 typeIdx;
      * }
      */
-    public class DexTypeItem{
-        public byte[] typeIdx=new byte[2];
+    public class DexTypeItem {
+        public byte[] typeIdx = new byte[2];
     }
 
     /**
      * typedef struct DexTypeList{
-     *     u4 size;
-     *     DexTypeItem list[11;
+     * u4 size;
+     * DexTypeItem list[11;
      * }
      */
-    public class DexTypeList{
-        public byte[] size=new byte[4];
-        public ArrayList<DexTypeItem> list=new ArrayList<DexTypeItem>();
+    public class DexTypeList {
+        public byte[] size = new byte[4];
+        public ArrayList<DexTypeItem> list = new ArrayList<DexTypeItem>();
     }
 
     /**
      * typedef struct DexFieldId{
-     *     u4 classIdx;
-     *     u4 typeIdx;
-     *     u4 nameIdx;
+     * u4 classIdx;
+     * u4 typeIdx;
+     * u4 nameIdx;
      * }
      */
-    public class DexFieldId{
-        public byte[] classIdx=new byte[2];
-        public byte[] typeIdx=new byte[2];
-        public byte[] nameIdx=new byte[4];
+    public class DexFieldId {
+        public byte[] classIdx = new byte[2];
+        public byte[] typeIdx = new byte[2];
+        public byte[] nameIdx = new byte[4];
     }
 
     /**
      * typedef struct DexMethodId{
-     *     u4 classIdx;
-     *     u4 protoIdx;
-     *     u4 nameIdx;
+     * u4 classIdx;
+     * u4 protoIdx;
+     * u4 nameIdx;
      * }
      */
-    public class DexMethodId{
-        public byte[] classIdx=new byte[2];
-        public byte[] protoIdx=new byte[2];
-        public byte[] nameIdx=new byte[4];
+    public class DexMethodId {
+        public byte[] classIdx = new byte[2];
+        public byte[] protoIdx = new byte[2];
+        public byte[] nameIdx = new byte[4];
     }
 
     /**
      * typedef struct DexClassDef{
-     *     u4 classIdx;
-     *     u4 accessFlags;
-     *     u4 superclassIdx;
-     *     u4 interfacesOff;
-     *     u4 sourceFileIdx;
-     *     u4 annotationsOff;
-     *     u4 classDataOff;
-     *     u4 staticValuesOff;
+     * u4 classIdx;
+     * u4 accessFlags;
+     * u4 superclassIdx;
+     * u4 interfacesOff;
+     * u4 sourceFileIdx;
+     * u4 annotationsOff;
+     * u4 classDataOff;
+     * u4 staticValuesOff;
      * }
      */
-    public class DexClassDef{
-        public byte[] classIdx=new byte[4];
-        public byte[] accessFlags=new byte[4];
-        public byte[] superclassIdx=new byte[4];
-        public byte[] interfacesOff=new byte[4];
-        public byte[] sourceFileIdx=new byte[4];
-        public byte[] annotationsOff=new byte[4];
-        public byte[] classDataOff=new byte[4];
-        public byte[] staticValuesOff=new byte[4];
+    public class DexClassDef {
+        public byte[] classIdx = new byte[4];
+        public byte[] accessFlags = new byte[4];
+        public byte[] superclassIdx = new byte[4];
+        public byte[] interfacesOff = new byte[4];
+        public byte[] sourceFileIdx = new byte[4];
+        public byte[] annotationsOff = new byte[4];
+        public byte[] classDataOff = new byte[4];
+        public byte[] staticValuesOff = new byte[4];
 
     }
 
 
     /**
      * typedef struct DexClassDataItem{
-     *     u4 staticFieldsSize;
-     *     u4 instanceFieldsSize;
-     *     u4 directMethodsSize;
-     *     u4 virtualMethodsSize;
+     * u4 staticFieldsSize;
+     * u4 instanceFieldsSize;
+     * u4 directMethodsSize;
+     * u4 virtualMethodsSize;
      * }
      */
-    public class DexClassDataItem{
+    public class DexClassDataItem {
         public byte[] staticFieldsSize = new byte[5];
         public byte[] instanceFieldsSize = new byte[5];
         public byte[] directMethodsSize = new byte[5];
@@ -257,14 +257,14 @@ public class DexType {
 
     }
 
-    public class DexCodeItem{
-        short registers_size ;
-        short ins_size ;
-        short outs_size ;
-        short tries_size ;
-        int debug_info_off ;
+    public class DexCodeItem {
+        short registers_size;
+        short ins_size;
+        short outs_size;
+        short tries_size;
+        int debug_info_off;
         int insns_size;
-        List<byte[]> insns ;
+        List<byte[]> insns;
 
         public DexCodeItem(byte[] pBuff, int pOff) {
             registers_size = Utils.byte2Short_2(pBuff, pOff + 0);
@@ -275,46 +275,46 @@ public class DexType {
             insns_size = Utils.byte2Int_4(pBuff, pOff + 12);
             insns = new ArrayList<>();
 
-            System.out.printf("\tCodeItem:\t.registers:%d, ������������:%d, ���������������ʱ��Ҫ�Ĳ�������:%d, try_item����:%d, %d,%d\r\n", registers_size, ins_size, outs_size, tries_size, debug_info_off, insns_size);
-            byte[] ttmp = new byte[insns_size*2];
-            System.arraycopy(pBuff, pOff+16, ttmp, 0, ttmp.length);
-            //ParseDex.getOpcodeByIns2(ttmp);
+            System.out.printf("\tCodeItem:\t.registers:%d, 方法参数个数:%d, 代码调用其他方法时需要的参数个数:%d, try_item个数:%d, %d,%d\r\n", registers_size, ins_size, outs_size, tries_size, debug_info_off, insns_size);
+            byte[] ttmp = new byte[insns_size * 2];
+            System.arraycopy(pBuff, pOff + 16, ttmp, 0, ttmp.length);
+            ParseDex.getOpcodeByIns2(ttmp);
 
 //            for (int i=0; i<insns_size; i++){
 //                byte[] tmp = new byte[2];
 //                System.arraycopy(pBuff, pOff + 16+i*2, tmp, 0, 2);
 //                insns.add(tmp);
 ////                System.out.printf("\t\t"+ParseDex.getOpcodeByIns2(tmp));
-//                System.out.printf(": " + Utils.bytes2HexString(tmp) + "\r\n");
+////                System.out.printf(": " + Utils.bytes2HexString(tmp) + "\r\n");
 //            }
-            System.out.println("");
+//            System.out.println("");
 
         }
 
-        public int getSize_CodeItem(){
+        public int getSize_CodeItem() {
             return insns_size;
         }
     }
 
     /**
      * typedef struct DexField{
-     *     u4 fieldIdx;
-     *     u4 accessFlags;
+     * u4 fieldIdx;
+     * u4 accessFlags;
      * }
      */
-    public class DexField{
+    public class DexField {
         public byte[] fieldIdx = new byte[5];
         public byte[] accessFlags = new byte[5];
     }
 
     /**
      * typedef struct DexMethod{
-     *     u4 methodIdx;
-     *     u4 accessFlags;
-     *     u4 codoOff;
+     * u4 methodIdx;
+     * u4 accessFlags;
+     * u4 codoOff;
      * }
      */
-    public class DexMethod{
+    public class DexMethod {
         public byte[] methodIdx = new byte[5];
         public byte[] accessFlags = new byte[5];
         public byte[] codeOff = new byte[5];
@@ -322,14 +322,14 @@ public class DexType {
 
     /**
      * typedef struct DexClassData{
-     *     DexClassDataItem header;
-     *     DexField* staticFields;
-     *     DexField* instanceFields;
-     *     DexMethod* directMethods;
-     *     DexMethod* virtualMethods
+     * DexClassDataItem header;
+     * DexField* staticFields;
+     * DexField* instanceFields;
+     * DexMethod* directMethods;
+     * DexMethod* virtualMethods
      * }
      */
-    public class DexClassData{
+    public class DexClassData {
         public ArrayList<DexClassDataItem> dexClassDataItems = new ArrayList<DexClassDataItem>();
         public ArrayList<DexField> staticFields = new ArrayList<DexField>();
         public ArrayList<DexField> instanceFields = new ArrayList<DexField>();
@@ -339,30 +339,29 @@ public class DexType {
 
     /**
      * typedef struct DexMapItem{
-     *     u2 type;
-     *     u2 unused;
-     *     u4 size;
-     *     u4 offset;
+     * u2 type;
+     * u2 unused;
+     * u4 size;
+     * u4 offset;
      * }
      */
-    public class DexMapItem{
-        public byte[] type=new byte[2];
-        public byte[] unused=new byte[2];
-        public byte[] size=new byte[4];
-        public byte[] offset=new byte[4];
+    public class DexMapItem {
+        public byte[] type = new byte[2];
+        public byte[] unused = new byte[2];
+        public byte[] size = new byte[4];
+        public byte[] offset = new byte[4];
     }
-
 
 
     /**
      * typedef struct DexMapList{
-     *     u4 size;
-     *     DexMapItem list[11;
+     * u4 size;
+     * DexMapItem list[11;
      * }
      */
-    public class DexMapList{
-        public byte[] size=new byte[4];
-        public ArrayList<DexMapItem> list=new ArrayList<DexMapItem>();
+    public class DexMapList {
+        public byte[] size = new byte[4];
+        public ArrayList<DexMapItem> list = new ArrayList<DexMapItem>();
         public Map<Integer, String> type_code = new HashMap<>();
 
         public DexMapList() {
@@ -386,8 +385,6 @@ public class DexType {
             type_code.put(0x2006, "TYPE_ANNOTATIONS_DIRECTORY_ITEM");
         }
     }
-
-
 
 
 }
