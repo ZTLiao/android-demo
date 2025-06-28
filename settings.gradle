@@ -22,5 +22,6 @@ dependencyResolutionManagement {
 rootProject.name = "android-demo"
 include ':app'
 include ':db'
-include ':mylibrary1'
 include ':ndk'
+include ':mylibrary1'
+include ':checkinnative'

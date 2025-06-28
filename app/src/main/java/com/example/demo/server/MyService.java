@@ -9,32 +9,32 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.demo.aidl.IMyAidlInterface;
+//import com.example.demo.aidl.IMyAidlInterface;
 
 public class MyService extends Service {
 
     String TAG = this.getClass().getSimpleName();
 
-    private IBinder mBinder = new IMyAidlInterface.Stub() {
-        @Override
-        public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, String aString) throws RemoteException {
-
-        }
-
-        @Override
-        public int getStudentAge(String name) throws RemoteException {
-            Student student = new Student();
-            return student.getAge(name);
-        }
-
-        @Override
-        public void getMyStruct(Bundle bundle) throws RemoteException {
-            Log.i(TAG, "getMyStruct");
-            bundle.setClassLoader(getClass().getClassLoader());
-            MyStruct myStruct = bundle.getParcelable("mystruct");
-            Log.i(TAG, "recv MyStruct : " + myStruct.toString());
-        }
-    };
+//    private IBinder mBinder = new IMyAidlInterface.Stub() {
+//        @Override
+//        public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, String aString) throws RemoteException {
+//
+//        }
+//
+//        @Override
+//        public int getStudentAge(String name) throws RemoteException {
+//            Student student = new Student();
+//            return student.getAge(name);
+//        }
+//
+//        @Override
+//        public void getMyStruct(Bundle bundle) throws RemoteException {
+//            Log.i(TAG, "getMyStruct");
+//            bundle.setClassLoader(getClass().getClassLoader());
+//            MyStruct myStruct = bundle.getParcelable("mystruct");
+//            Log.i(TAG, "recv MyStruct : " + myStruct.toString());
+//        }
+//    };
 
     @Override
     public void onCreate() {

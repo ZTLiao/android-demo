@@ -1,0 +1,66 @@
+1确定环境 配置环境  ----------------------------------------
+官网教程  环境配置
+https://source.android.com/docs/setup/start/initializing?hl=zh-cn#installing-required-packages-ubuntu-1804
+
+https://source.android.com/source/running?hl=zh-cn#selecting-device-build
+
+2搜集要编译版本信息---------------------------------------
+手机型号和安卓系统版本对应关系
+https://source.android.com/docs/setup/about/build-numbers?hl=zh-cn#source-code-tags-and-builds
+
+Pixel	sailfish	aosp_sailfish-userdebug
+OPM1.171019.011	android-8.1.0_r1	Oreo	Pixel
+
+------------------------------------------
+sudo apt-get install openjdk-8-jdk
+
+默认python为python3
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 100
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 150
+
+3下载源码-----------------------------------------------
+https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/
+
+下载 repo 工具:
+
+mkdir ~/bin
+PATH=~/bin:$PATH
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo
+
+repo init -u https://mirrors.tuna.tsinghua.edu.cn/git/AOSP/platform/manifest
+repo init -u https://mirrors.tuna.tsinghua.edu.cn/git/AOSP/platform/manifest -b android-8.1.0_r1
+
+repo sync 真正下载耗时间
+
+4下载驱动 --------------------------------------------------------
+https://developers.google.com/android/drivers?hl=zh-cn
+
+虚拟机共享目录 
+sudo apt install open-vm-tools*
+sudo umount /mnt/hgfs
+sudo /usr/bin/vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other -o uid=1000 -o gid=1000 -o umask=022
+执行驱动后
+
+5、编译系统源码
+默认python为python2
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 150
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 100
+
+make clobber 清除中间文件
+
+source build/envsetup.sh
+or
+. build/envsetup.sh
+lunch 
+make 
+等待编译 
+解决编译错误 
+
+
+6、刷机
+adb reboot bootloader
+fastboot flashall -w
+
+
+

@@ -26,7 +26,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 
-import com.example.demo.aidl.IMyAidlInterface;
+//import com.example.demo.aidl.IMyAidlInterface;
 import com.example.demo.client.IStudentInterface;
 import com.example.demo.receiver.MyReceiver;
 import com.example.demo.receiver.OrderReceiver01;
@@ -70,7 +70,7 @@ public class MainActivity extends ComponentActivity {
 
     IStudentInterface iStudentInterface;
 
-    IMyAidlInterface iMyAidlInterface;
+//    IMyAidlInterface iMyAidlInterface;
 
     static final Uri uri = Uri.parse("content://com.example.db.authority/user");
 
@@ -150,18 +150,18 @@ public class MainActivity extends ComponentActivity {
         });
         btn_searchAge.setOnClickListener(v -> {
             Log.i(TAG, "search age");
-            try {
-                iMyAidlInterface.getStudentAge("tom");
-                MyStruct myStruct = new MyStruct(1, 2, 3, 4, "tom");
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("mystruct", myStruct);
-                iMyAidlInterface.getMyStruct(bundle);
-                bundle.setClassLoader(getClass().getClassLoader());
-                myStruct = bundle.getParcelable("mystruct");
-                Log.i(TAG, "myStruct : " + myStruct.toString());
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
+//            try {
+//                iMyAidlInterface.getStudentAge("tom");
+//                MyStruct myStruct = new MyStruct(1, 2, 3, 4, "tom");
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelable("mystruct", myStruct);
+//                iMyAidlInterface.getMyStruct(bundle);
+//                bundle.setClassLoader(getClass().getClassLoader());
+//                myStruct = bundle.getParcelable("mystruct");
+//                Log.i(TAG, "myStruct : " + myStruct.toString());
+//            } catch (RemoteException e) {
+//                throw new RuntimeException(e);
+//            }
         });
     }
 
@@ -169,12 +169,12 @@ public class MainActivity extends ComponentActivity {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
 //            iStudentInterface = BindProxy.asInterface(iBinder);
-            iMyAidlInterface = IMyAidlInterface.Stub.asInterface(iBinder);
+//            iMyAidlInterface = IMyAidlInterface.Stub.asInterface(iBinder);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            iMyAidlInterface = null;
+//            iMyAidlInterface = null;
         }
     };
 
@@ -309,9 +309,9 @@ public class MainActivity extends ComponentActivity {
         OrderReceiver03 orderReceiver03 = new OrderReceiver03();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("RULE");
-        registerReceiver(orderReceiver01, intentFilter);
-        registerReceiver(orderReceiver02, intentFilter);
-        registerReceiver(orderReceiver03, intentFilter);
+//        registerReceiver(orderReceiver01, intentFilter);
+//        registerReceiver(orderReceiver02, intentFilter);
+//        registerReceiver(orderReceiver03, intentFilter);
         btn_sendOrderBroadcast = findViewById(R.id.btn_orderBroadcast);
         btn_sendOrderBroadcast.setOnClickListener(v -> {
             Intent intent = new Intent();

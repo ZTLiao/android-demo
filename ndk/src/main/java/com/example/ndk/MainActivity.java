@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void fun2() {
         try {
-            Class<?> clazz = com.example.ndk.Student.class;
+            Class<?> clazz = Student.class;
             Constructor<?> constructor = clazz.getConstructor(String.class, int.class);
             Object obj = constructor.newInstance("tom", 25);
             Method method = clazz.getMethod("study", int.class);

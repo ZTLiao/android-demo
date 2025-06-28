@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.demo"
-        minSdk 28
-        targetSdk 28
+        minSdk 24
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -33,7 +33,6 @@ android {
     }
     buildFeatures {
         compose true
-        aidl true
     }
 }
 
@@ -47,7 +46,6 @@ dependencies {
     implementation libs.androidx.ui.graphics
     implementation libs.androidx.ui.tooling.preview
     implementation libs.androidx.material3
-    implementation files('src/test/java/com/example/demo/apktool_2.6.1.jar')
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
