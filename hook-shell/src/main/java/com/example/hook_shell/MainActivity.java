@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         stringFromJNI();
+        secondShell();
         testDexClassLoader(this, "/sdcard/5/4.dex");
         testDexClassLoader(this, "/sdcard/5/5.dex");
     }
