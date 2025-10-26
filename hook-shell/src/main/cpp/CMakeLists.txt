@@ -13,6 +13,10 @@ include_directories(
 add_library( # Sets the name of the library.
         hookshell                                   # c/cpp代码将要编译成为so库的名称，java代码加载库文件要用这个名称
         SHARED                                      # 动态库
+        hook/relocate.c
+        hook/inlineHook.c
+        hook/dlfcn/dlfcn_nougat.c
+        hook/dlfcn/dlfcn_compat.c
         native-lib.cpp  # cpp代码文件路径 可以在下面接着随意添加c、c++文件
 )
 
