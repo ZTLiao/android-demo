@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.4.1)
+
+project("hookshell")
+
+#设置生成的so动态库最后输出的路径
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/${ANDROID_ABI})
+
+#.h文件目录
+include_directories(
+        ${CMAKE_SOURCE_DIR}/src/main/cpp/include #h文件目录
+)
+
+add_library( # Sets the name of the library.
+        easymd5                                   # c/cpp代码将要编译成为so库的名称，java代码加载库文件要用这个名称
+        SHARED                                      # 动态库
+
+        native-lib.cpp  # cpp代码文件路径 可以在下面接着随意添加c、c++文件
+)
+
+find_library(   # 调用系统库
+        log-lib # 打印用
+        log)
+
+target_link_libraries( # Specifies the target library.
+        easymd5
+        ${log-lib})
+
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g2 -ggdb")
+SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
