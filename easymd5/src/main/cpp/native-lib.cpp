@@ -95,6 +95,63 @@ void MD5Final(MD5_CTX *mdContext);
  ** documentation and/or software.                                   **
  **********************************************************************
  */
+//
+//
+//#define NELEM(x) ((int) (sizeof(x) / sizeof((x)[0])))
+//
+//
+//
+//jstring ffff(
+//        JNIEnv *env, jclass obj, jstring str) {
+//    MD5_CTX mdContext;
+//    int m = 0;
+//    char *inString = const_cast<char *>(env->GetStringUTFChars(str, NULL));
+//
+//
+//    unsigned int len = strlen(inString);
+//
+//    MD5Init(&mdContext);
+//    MD5Update(&mdContext, reinterpret_cast<unsigned char *>(inString), len);
+//    MD5Final(&mdContext);
+//
+//    int i;
+//    char dest[32] = { 0 };
+//    for (i = 0; i < 16; i++) {
+//        sprintf(dest + i * 2, "%02x", mdContext.digest[i]);
+//    }
+//
+//    return env->NewStringUTF(dest);
+//}
+//
+//static JNINativeMethod method_table[] = {
+//        {"mdString", "(Ljava/lang/String;)Ljava/lang/String;", (void *) ffff},
+//};
+//
+//static int registerMethods(JNIEnv *env, const char *className,
+//                           JNINativeMethod *gMethods, int numMethods) {
+//    jclass clazz = env->FindClass(className);
+//    if (clazz == nullptr) {
+//        return JNI_FALSE;
+//    }
+//    if (env->RegisterNatives(clazz, gMethods, numMethods) < 0) {
+//        return JNI_FALSE;
+//    }
+//    return JNI_TRUE;
+//}
+//
+//JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
+//    JNIEnv *env = nullptr;
+//    if (vm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
+//        return JNI_ERR;
+//    }
+//
+//    // 注册native方法
+//    if (!registerMethods(env,"com/example/easymd5/MainActivity" , method_table, NELEM(method_table))) {
+//        return JNI_ERR;
+//    }
+//
+//    return JNI_VERSION_1_6;
+//}
 
 extern "C" JNIEXPORT jstring JNICALL Java_com_example_easymd5_MainActivity_mdString(
         JNIEnv *env, jclass obj, jstring str) {
@@ -150,7 +207,7 @@ extern "C" JNIEXPORT jstring JNICALL Java_com_example_easymd5_MainActivity_mdFil
 /* #include "md5.h" */
 
 /* forward declaration */
-static void Transform();
+static void Transform(UINT4 *buf, UINT4 *in);
 
 static unsigned char PADDING[64] = { 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                                      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
