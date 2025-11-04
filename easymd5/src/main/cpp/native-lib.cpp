@@ -615,3 +615,32 @@ static void Transform(UINT4 *buf, UINT4 *in) {
  ** End of md5driver.c                                               **
  ******************************* (cut) ********************************
  */
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_easymd5_MainActivity_Refmd5(JNIEnv *env, jclass clazz, jstring string) {
+    jclass MessageDigest = env->FindClass("java/security/MessageDigest");
+    jmethodID getInstance = env->GetStaticMethodID(MessageDigest, "getInstance", "(Ljava/lang/String;)Ljava/security/MessageDigest;");
+    jstring MD5 = env->NewStringUTF("MD5");
+    jobject md5 = env->CallStaticObjectMethod(MessageDigest, getInstance, MD5);
+    jmethodID digest = env->GetMethodID(MessageDigest, "digest", "([B)[B");
+    jclass stringClass = env->FindClass("java/lang/String");
+    jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "()[B");
+    jbyteArray jba = static_cast<jbyteArray>(env->CallObjectMethod(string, getBytes));
+    jbyteArray md5result = static_cast<jbyteArray>(env->CallObjectMethod(md5, digest, jba));
+    char* cmd5 = reinterpret_cast<char *>(env->GetByteArrayElements(md5result, 0));
+    int i;
+    char dest[32] = { 0 };
+    for (i = 0; i < 16; i++) {
+        sprintf(dest + i * 2, "%02x", (unsigned int) cmd5[i]);
+    }
+    return env->NewStringUTF(dest);
+}
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_easymd5_MainActivity_Refmd5sec(JNIEnv *env, jclass clazz, jstring string) {
+    jclass MainActivity = env->FindClass("com/example/easymd5/MainActivity");
+    jmethodID JavaMd5 = env->GetStaticMethodID(MainActivity, "javaMd5", "(Ljava/lang/String;)Ljava/lang/String;");
+    jstring result = static_cast<jstring>(env->CallStaticObjectMethod(MainActivity, JavaMd5,
+                                                                      string));
+    return result;
+}
