@@ -21,18 +21,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        TextView tv = findViewById(R.id.sample_text);
-        tv.setText(Arrays.toString(Build.SUPPORTED_ABIS) + "\n v7a so md5 => "+ mdString("123456") + "\n java md5 => " + javaMd5("123456") + "\n RefMd5 => " + Refmd5("123456"));
-    }
+    protected native void onCreate(Bundle savedInstanceState);
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        EdgeToEdge.enable(this);
+//        setContentView(R.layout.activity_main);
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
+//        TextView tv = findViewById(R.id.sample_text);
+//        tv.setText(
+//                Arrays.toString(Build.SUPPORTED_ABIS) + "\n " +
+//                        "v7a so md5 => "+ mdString("123456") + "\n " +
+//                        "java md5 => " + javaMd5("123456") + "\n " +
+//                        "RefMd5 => " + Refmd5("123456") + "\n" +
+//                        "RefMd5Sec => " + Refmd5sec("123456") + "\n");
+//    }
 
     public static native String mdString(String string);
 

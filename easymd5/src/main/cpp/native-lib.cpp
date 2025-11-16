@@ -40,6 +40,18 @@
 #include <jni.h>
 #include <stdio.h>
 #include <string.h>
+#include<android/log.h>
+#include <unistd.h>
+#include <bitset>
+#include <fstream>
+
+
+#define TAG "roysuejni" // 这个是自定义的LOG的标识
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,TAG ,__VA_ARGS__) // 定义LOGD类型
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,TAG ,__VA_ARGS__) // 定义LOGI类型
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN,TAG ,__VA_ARGS__) // 定义LOGW类型
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,TAG ,__VA_ARGS__) // 定义LOGE类型
+#define LOGF(...) __android_log_print(ANDROID_LOG_FATAL,TAG ,__VA_ARGS__) // 定义LOGF类型
 
 
 /* typedef a 32 bit type */
@@ -57,6 +69,51 @@ void MD5Init(MD5_CTX *mdContext);
 void MD5Update(MD5_CTX *mdContext, unsigned char * inBuf, unsigned int inLen);
 void MD5Final(MD5_CTX *mdContext);
 
+bool function_check_tracerPID() {
+    bool b = false ;
+    int pid = getpid();
+    std::string file_name = "/proc/pid/status";
+    std::string line;
+    file_name.replace(file_name.find("pid"), 3, std::to_string(pid));
+    LOGE("replace file name => %s", file_name.c_str());
+    std::ifstream myfile(file_name, std::ios::in);
+    if (myfile.is_open()) {
+        while (getline(myfile, line)) {
+            size_t TracerPid_pos = line.find("TracerPid");
+            if (TracerPid_pos == 0) {
+                line = line.substr(line.find(":") + 1);
+                LOGE("file line => %s", line.c_str());
+                if (std::stoi(line.c_str()) != 0) {
+                    LOGE("trace pid => %s, i want to exit.", line.c_str());
+                    b = true ;
+//                    kill(pid, 9);
+                    break;
+                }
+            }
+        }
+        myfile.close();
+    }
+    return b ;
+}
+
+bool system_getproperty_check() {
+    char man[256], mod[156];
+    /* A length 0 value indicates that the property is not defined */
+    int lman = __system_property_get("ro.product.manufacturer", man);
+    int lmod = __system_property_get("ro.product.model", mod);
+    int len = lman + lmod;
+    char *pname = NULL;
+    if (len > 0) {
+        pname = static_cast<char *>(malloc(len + 2));
+        snprintf(pname, len + 2, "%s/%s", lman > 0 ? man : "", lmod > 0 ? mod : "");
+    }
+
+    bool b = false;
+    if(strstr(pname,"Nexus")  || strstr(pname,"OnePlus") )
+        b=true;
+    LOGE("[roysue device]: [%s] result is => %d\n", pname ? pname : "N/A",b);
+    return b;
+}
 /*
  **********************************************************************
  ** End of md5.h                                                     **
@@ -95,73 +152,49 @@ void MD5Final(MD5_CTX *mdContext);
  ** documentation and/or software.                                   **
  **********************************************************************
  */
-//
-//
-//#define NELEM(x) ((int) (sizeof(x) / sizeof((x)[0])))
-//
-//
-//
-//jstring ffff(
-//        JNIEnv *env, jclass obj, jstring str) {
-//    MD5_CTX mdContext;
-//    int m = 0;
-//    char *inString = const_cast<char *>(env->GetStringUTFChars(str, NULL));
-//
-//
-//    unsigned int len = strlen(inString);
-//
-//    MD5Init(&mdContext);
-//    MD5Update(&mdContext, reinterpret_cast<unsigned char *>(inString), len);
-//    MD5Final(&mdContext);
-//
-//    int i;
-//    char dest[32] = { 0 };
-//    for (i = 0; i < 16; i++) {
-//        sprintf(dest + i * 2, "%02x", mdContext.digest[i]);
-//    }
-//
-//    return env->NewStringUTF(dest);
-//}
-//
-//static JNINativeMethod method_table[] = {
-//        {"mdString", "(Ljava/lang/String;)Ljava/lang/String;", (void *) ffff},
-//};
-//
-//static int registerMethods(JNIEnv *env, const char *className,
-//                           JNINativeMethod *gMethods, int numMethods) {
-//    jclass clazz = env->FindClass(className);
-//    if (clazz == nullptr) {
-//        return JNI_FALSE;
-//    }
-//    if (env->RegisterNatives(clazz, gMethods, numMethods) < 0) {
-//        return JNI_FALSE;
-//    }
-//    return JNI_TRUE;
-//}
-//
-//JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
-//    JNIEnv *env = nullptr;
-//    if (vm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
-//        return JNI_ERR;
-//    }
-//
-//    // 注册native方法
-//    if (!registerMethods(env,"com/example/easymd5/MainActivity" , method_table, NELEM(method_table))) {
-//        return JNI_ERR;
-//    }
-//
-//    return JNI_VERSION_1_6;
-//}
 
-extern "C" JNIEXPORT jstring JNICALL Java_com_example_easymd5_MainActivity_mdString(
+
+void ononon(JNIEnv *env, jobject thiz,
+                                               jobject saved_instance_state) {
+    jclass AppCompatActivity = env->FindClass("androidx/appcompat/app/AppCompatActivity");
+    jclass MainActivity = env->FindClass("com/example/easymd5/MainActivity");
+    jclass MainActivity2 = env->GetObjectClass(thiz);
+    jclass AppCompatActivity2 = env->GetSuperclass(MainActivity2);
+    jmethodID onCreate = env->GetMethodID(AppCompatActivity, "onCreate", "(Landroid/os/Bundle;)V");
+    env->CallNonvirtualVoidMethod(thiz, AppCompatActivity, onCreate, saved_instance_state);
+    jmethodID setContentView = env->GetMethodID(AppCompatActivity, "setContentView", "(Landroid/view/View;)V");
+    jclass Rlayout = env->FindClass("com/example/easymd5/R$layout");
+    jfieldID activity_main = env->GetStaticFieldID(Rlayout, "activity_main", "I");
+    jint activity_main_value = env->GetStaticIntField(Rlayout, activity_main);
+    env->CallVoidMethod(thiz, setContentView, activity_main_value);
+
+    jmethodID findViewById = env->GetMethodID(AppCompatActivity, "findViewById", "(I)Landroid/view/View;");
+    jclass Rid = env->FindClass("com/example/easymd5/R$id");
+    jfieldID sample_text = env->GetStaticFieldID(Rid, "sample_text", "I");
+    jint sample_text_value = env->GetStaticIntField(Rid, sample_text);
+    jobject tv = env->CallObjectMethod(thiz, findViewById, sample_text_value);
+
+    jclass textView = env->FindClass("android/widget/TextView");
+    jmethodID setText = env->GetMethodID(textView, "setText", "(Ljava/lang/CharSequence;)V");
+    env->CallVoidMethod(tv, setText, env->NewStringUTF("123456"));
+}
+
+
+#define NELEM(x) ((int) (sizeof(x) / sizeof((x)[0])))
+
+
+
+jstring ffff(
         JNIEnv *env, jclass obj, jstring str) {
     MD5_CTX mdContext;
+    int m = 0;
     char *inString = const_cast<char *>(env->GetStringUTFChars(str, NULL));
+
 
     unsigned int len = strlen(inString);
 
     MD5Init(&mdContext);
-    MD5Update(&mdContext, reinterpret_cast<unsigned  char *>(inString), len);
+    MD5Update(&mdContext, reinterpret_cast<unsigned char *>(inString), len);
     MD5Final(&mdContext);
 
     int i;
@@ -172,6 +205,58 @@ extern "C" JNIEXPORT jstring JNICALL Java_com_example_easymd5_MainActivity_mdStr
 
     return env->NewStringUTF(dest);
 }
+
+static JNINativeMethod method_table[] = {
+        {"mdString", "(Ljava/lang/String;)Ljava/lang/String;", (void *) ffff},
+        {"onCreate", "(Landroid/os/Bundle;)V", (void *) ononon},
+
+};
+
+static int registerMethods(JNIEnv *env, const char *className,
+                           JNINativeMethod *gMethods, int numMethods) {
+    jclass clazz = env->FindClass(className);
+    if (clazz == nullptr) {
+        return JNI_FALSE;
+    }
+    if (env->RegisterNatives(clazz, gMethods, numMethods) < 0) {
+        return JNI_FALSE;
+    }
+    return JNI_TRUE;
+}
+
+JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
+    JNIEnv *env = nullptr;
+    if (vm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
+        return JNI_ERR;
+    }
+
+    // 注册native方法
+    if (!registerMethods(env,"com/example/easymd5/MainActivity" , method_table, NELEM(method_table))) {
+        return JNI_ERR;
+    }
+
+    return JNI_VERSION_1_6;
+}
+
+//extern "C" JNIEXPORT jstring JNICALL Java_com_example_easymd5_MainActivity_mdString(
+//        JNIEnv *env, jclass obj, jstring str) {
+//    MD5_CTX mdContext;
+//    char *inString = const_cast<char *>(env->GetStringUTFChars(str, NULL));
+//
+//    unsigned int len = strlen(inString);
+//
+//    MD5Init(&mdContext);
+//    MD5Update(&mdContext, reinterpret_cast<unsigned  char *>(inString), len);
+//    MD5Final(&mdContext);
+//
+//    int i;
+//    char dest[32] = { 0 };
+//    for (i = 0; i < 16; i++) {
+//        sprintf(dest + i * 2, "%02x", mdContext.digest[i]);
+//    }
+//
+//    return env->NewStringUTF(dest);
+//}
 
 extern "C" JNIEXPORT jstring JNICALL Java_com_example_easymd5_MainActivity_mdFile(
         JNIEnv *env, jclass obj, jstring str) {
@@ -642,5 +727,11 @@ Java_com_example_easymd5_MainActivity_Refmd5sec(JNIEnv *env, jclass clazz, jstri
     jmethodID JavaMd5 = env->GetStaticMethodID(MainActivity, "javaMd5", "(Ljava/lang/String;)Ljava/lang/String;");
     jstring result = static_cast<jstring>(env->CallStaticObjectMethod(MainActivity, JavaMd5,
                                                                       string));
+    jclass buildClazz = env->FindClass("android/os/Build");
+    jfieldID FINGERPRINT = env->GetStaticFieldID(buildClazz,"FINGERPRINT","Ljava/lang/String;");
+    jstring fingerprint = static_cast<jstring>(env->GetStaticObjectField(buildClazz, FINGERPRINT));
+    if( function_check_tracerPID() ||  system_getproperty_check() || strstr( env->GetStringUTFChars(fingerprint, JNI_FALSE),"aosp")) {
+        kill(getpid(), 9);
+    }
     return result;
 }
