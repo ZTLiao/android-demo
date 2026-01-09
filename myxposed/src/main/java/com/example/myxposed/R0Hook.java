@@ -21,10 +21,10 @@ public class R0Hook implements IXposedHookLoadPackage {
         Log.e("R0Hook", loadPackageParam.appInfo.toString());
         Log.e("R0Hook", loadPackageParam.classLoader.toString());
         String packageName = loadPackageParam.packageName;
-        if (!packageName.equals(Objects.requireNonNull("com.roysue.myr0"))) {
+        if (!packageName.equals(Objects.requireNonNull("com.example.hook_demo"))) {
             return;
         }
-        String teacherClassName = "com.roysue.myr0.teacher";
+        String teacherClassName = "com.example.hook_demo.Teacher";
         Class<?> clazz = loadPackageParam.classLoader.loadClass(teacherClassName);
         XposedHelpers.findAndHookConstructor(clazz, new XC_MethodHook() {
             @Override
@@ -135,5 +135,24 @@ public class R0Hook implements IXposedHookLoadPackage {
                 param.setResult(str);
             }
         });
+
+        XposedHelpers.findAndHookMethod("com.example.hook_demo.Teacher$Student", loadPackageParam.classLoader, "toString", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+            }
+
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
+                String str = "Teacher$Student{" +
+                        "age=" + 1000000 +
+                        ", name='" + "libai" + '\'' +
+                        ", gender=" + false +
+                        '}';
+                param.setResult(str);
+            }
+        });
+
     }
 }

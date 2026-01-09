@@ -24,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
+    static {
+        System.loadLibrary("hookdemo");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i("hook-demo MainActivity", teacher2.toString());
         Log.i("hook-demo MainActivity", teacher3.toString());
         Log.i("hook-demo MainActivity", teacher4.toString());
+        Teacher.Student student = new Teacher.Student();
+        Log.i("hook-demo MainActivity", student.toString());
     }
 
     @Override
@@ -84,4 +90,7 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    public native String stringFromJNI();
+
 }

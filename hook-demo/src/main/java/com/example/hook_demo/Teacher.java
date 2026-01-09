@@ -27,11 +27,15 @@ public class Teacher {
 
     @Override
     public String toString() {
+        Student a = new Student();
+        a.age = age;
+        a.name = name;
+        String string = a.toString();
         return "Teacher{" +
                 "age=" + age +
                 ", name='" + name + '\'' +
                 ", gender=" + gender +
-                '}';
+                '}'+ "\n" + string;
     }
 
     static class Student {
@@ -46,14 +50,12 @@ public class Teacher {
 
         @Override
         public String toString() {
-            Student a = new Student();
-            String string = a.toString();
             return "Student{" +
                     "age=" + age +
                     ", name='" + name + '\'' +
                     ", city='" + city + '\'' +
                     ", hair=" + hair +
-                    '}' + "\n" + string;
+                    '}';
         }
     }
 }

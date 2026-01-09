@@ -70,5 +70,19 @@ public class R1Hook implements IXposedHookLoadPackage {
                 XposedBridge.log("two constructor afterHookedMethod is call");
             }
         });
+
+        XposedHelpers.findAndHookMethod("com.example.hook_demo.MainActivity", loadPackageParam.classLoader, "stringFromJNI", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+            }
+
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
+                String str = "test hook jni method...";
+                param.setResult(str);
+            }
+        });
     }
 }
