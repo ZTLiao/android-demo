@@ -1,4 +1,4 @@
-package com.example.myxposed;
+package com.example.hook_demo;
 
 public class Teacher {
 
@@ -32,5 +32,28 @@ public class Teacher {
                 ", name='" + name + '\'' +
                 ", gender=" + gender +
                 '}';
+    }
+
+    static class Student {
+        int age = 10;
+        String name = "mark";
+        String city = "Guangzhou";
+        boolean hair = false;
+
+        public int getAge() {
+            return age;
+        }
+
+        @Override
+        public String toString() {
+            Student a = new Student();
+            String string = a.toString();
+            return "Student{" +
+                    "age=" + age +
+                    ", name='" + name + '\'' +
+                    ", city='" + city + '\'' +
+                    ", hair=" + hair +
+                    '}' + "\n" + string;
+        }
     }
 }

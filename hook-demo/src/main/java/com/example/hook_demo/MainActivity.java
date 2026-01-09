@@ -1,4 +1,4 @@
-package com.example.myxposed;
+package com.example.hook_demo;
 
 import android.os.Bundle;
 
@@ -6,6 +6,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -13,7 +14,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.myxposed.databinding.ActivityMainBinding;
+import com.example.hook_demo.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        Teacher teacher1 = new Teacher();
+        Teacher teacher2 = new Teacher(2);
+        Teacher teacher3 = new Teacher(3, "tom3");
+        Teacher teacher4 = new Teacher(4, "tom4", false);
+        Log.i("hook-demo MainActivity", teacher1.toString());
+        Log.i("hook-demo MainActivity", teacher2.toString());
+        Log.i("hook-demo MainActivity", teacher3.toString());
+        Log.i("hook-demo MainActivity", teacher4.toString());
     }
 
     @Override

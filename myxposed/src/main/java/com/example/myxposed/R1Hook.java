@@ -19,10 +19,11 @@ public class R1Hook implements IXposedHookLoadPackage {
         Log.i("R1Hook", loadPackageParam.appInfo.toString());
         Log.i("R1Hook", loadPackageParam.classLoader.toString());
         String packageName = loadPackageParam.packageName;
-        if (!packageName.equals(Objects.requireNonNull(this.getClass().getPackage()).getName())) {
+        if (!packageName.equals(Objects.requireNonNull("com.example.hook_demo"))) {
             return;
         }
-        Class<?> clazz = loadPackageParam.classLoader.loadClass("com.example.myxposed.Teacher");
+        String teacherClassName = "com.example.hook_demo.Teacher";
+        Class<?> clazz = loadPackageParam.classLoader.loadClass(teacherClassName);
         XposedHelpers.findAndHookConstructor(clazz, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

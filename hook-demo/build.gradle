@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.myxposed'
+    namespace 'com.example.hook_demo'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.example.myxposed"
+        applicationId "com.example.hook_demo"
         minSdk 25
         targetSdk 35
         versionCode 1
@@ -32,8 +32,6 @@ android {
 }
 
 dependencies {
-    compileOnly files('libs/XposedBridgeAPI-82.jar')
-    compileOnly files('libs/XposedBridgeAPI-82-sources.jar')
 
     implementation libs.androidx.appcompat
     implementation libs.material
