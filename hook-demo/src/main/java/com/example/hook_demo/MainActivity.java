@@ -19,6 +19,10 @@ import com.example.hook_demo.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.lang.reflect.Method;
+
+import dalvik.system.DexClassLoader;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
@@ -60,6 +64,14 @@ public class MainActivity extends AppCompatActivity {
         Log.i("hook-demo MainActivity", teacher4.toString());
         Teacher.Student student = new Teacher.Student();
         Log.i("hook-demo MainActivity", student.toString());
+        Log.e("hook-demo", Teacher.getStr(teacher4));
+        try {
+            DexClassLoader dexClassLoader = new DexClassLoader("/sdcard/4.dex", this.getCacheDir().getAbsolutePath(), null, this.getClassLoader());
+            Class<?> clazz = dexClassLoader.loadClass("com.example.myplugin.TestDex");
+            Method printfMethod = clazz.getDeclaredMethod("printf", clazz);
+            Object result = printfMethod.invoke(null);
+            Log.e("Hook Demo", result.toString());
+        } catch (Exception ignored) {}
     }
 
     @Override

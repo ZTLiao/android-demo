@@ -58,4 +58,20 @@ public class Teacher {
                     '}';
         }
     }
+
+    public String publicMethod() {
+        return "I am from public method";
+    }
+
+    private String privateMethod() {
+        return "I am from private method";
+    }
+
+    public static String publicStatic() {
+        return "I am from public static method";
+    }
+
+    public static String getStr(Teacher a) {
+        return a.age + "\n" + a.name + "\n" + a.gender;
+    }
 }
