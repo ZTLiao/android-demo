@@ -10,6 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Base64Demo" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/appclone" />
             <option value="$PROJECT_DIR$/checkinnative" />
@@ -21,6 +22,8 @@
             <option value="$PROJECT_DIR$/myplugin" />
             <option value="$PROJECT_DIR$/myxposed" />
             <option value="$PROJECT_DIR$/ndk" />
+            <option value="$PROJECT_DIR$/r0hook8" />
+            <option value="$PROJECT_DIR$/r0somake" />
           </set>
         </option>
       </GradleProjectSettings>

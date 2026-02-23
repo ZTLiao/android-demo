@@ -1,3 +1,5 @@
 com.example.myxposed.R0Hook
 com.example.myxposed.R1Hook
 com.example.myxposed.R2Hook
+com.example.myxposed.R0SoHook
+com.example.myxposed.Kk
