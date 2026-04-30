@@ -12,11 +12,11 @@ public class SpdySession$3 implements sab$a {
 
     @Override
     public void a() {
-        this.a.notifyLifecycleEvent(1);
+        this.a.notifyLifecycleEvent(true);
     }
 
     @Override
     public void b() {
-        this.a.notifyLifecycleEvent(0);
+        this.a.notifyLifecycleEvent(false);
     }
 }
