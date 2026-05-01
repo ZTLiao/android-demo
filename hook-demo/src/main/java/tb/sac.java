@@ -65,13 +65,13 @@ public class sac {
                 sad.a(sac.a("jni_tlog_xquic_level", 2));
                 sad.b(sac.a("quic_connect_timeout_ms", 5000));
                 sad.c(sac.a("tcp_connect_timeout_ms", 6000));
-                sad.f(String.valueOf(sac.a("tunnel_proxy_enable_switch", 1)));
-                sad.g(String.valueOf(sac.a("request_read_idle_timeout_switch", 1)));
-                sad.i(String.valueOf(sac.a("http3_opt_dev_enable", 1)));
-                sad.o(String.valueOf(sac.a("http_zstd_enable", 1)));
-                sad.l(String.valueOf(sac.a("agent_free_enable", 1)));
-                sad.m(String.valueOf(sac.a("channel_mem_opt_enable", i)));
-                sad.n(String.valueOf(sac.a("quic_so_plugin_load_enable", 1)));
+                sad.f(sac.a("tunnel_proxy_enable_switch", 1) == 1);
+                sad.g(sac.a("request_read_idle_timeout_switch", 1) == 1);
+                sad.i(sac.a("http3_opt_dev_enable", 1) == 1);
+                sad.o(sac.a("http_zstd_enable", 1) == 1);
+                sad.l(sac.a("agent_free_enable", 1) == 1);
+                sad.m(sac.a("channel_mem_opt_enable", i) == 1);
+                sad.n(sac.a("quic_so_plugin_load_enable", 1) == 1);
                 long l = sac.a("quic_init_and_min_cwnd", 0);
                 try{
                     sad.e(l);
