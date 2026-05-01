@@ -30,28 +30,28 @@ public class SecurityGuardCacherImp implements QuicCacher {
             return;
         }
         try{
-            this.SecurityGuardManager = Class.forName("com.taobao.wireless.security.sdk.SecurityGuardManager");
-            Class[] uClassArray = new Class[]{Context.class};
-            this.getInstance = this.SecurityGuardManager.getDeclaredMethod("getInstance", uClassArray);
-            Object[] objArray = new Object[]{p0};
-            this.sgMgr = this.getInstance.invoke(null, objArray);
-            if (this.sgMgr == null) {
-                return;
-            }
-            Class[] uClassArray1 = new Class[0];
-            this.getDynamicDataStoreComp = this.SecurityGuardManager.getDeclaredMethod("getDynamicDataStoreComp", uClassArray1);
-            Object[] objArray1 = new Object[0];
-            this.ddsComp = this.getDynamicDataStoreComp.invoke(this.sgMgr, objArray1);
-            if (this.ddsComp == null) {
-                return;
-            }
-            this.IDynamicDataStoreComponent = Class.forName("com.taobao.wireless.security.sdk.dynamicdatastore.IDynamicDataStoreComponent");
-            uClassArray1 = new Class[]{String.class,String.class,Integer.TYPE};
-            this.putStringDDpEx = this.IDynamicDataStoreComponent.getDeclaredMethod("putStringDDpEx", uClassArray1);
-            uClassArray1 = new Class[]{String.class,Integer.TYPE};
-            this.getStringDDpEx = this.IDynamicDataStoreComponent.getDeclaredMethod("getStringDDpEx", uClassArray1);
-            uClassArray1 = new Class[]{String.class,Integer.TYPE};
-            this.removeStringDDpEx = this.IDynamicDataStoreComponent.getDeclaredMethod("removeStringDDpEx", uClassArray1);
+//            this.SecurityGuardManager = Class.forName("com.taobao.wireless.security.sdk.SecurityGuardManager");
+//            Class[] uClassArray = new Class[]{Context.class};
+//            this.getInstance = this.SecurityGuardManager.getDeclaredMethod("getInstance", uClassArray);
+//            Object[] objArray = new Object[]{p0};
+//            this.sgMgr = this.getInstance.invoke(null, objArray);
+//            if (this.sgMgr == null) {
+//                return;
+//            }
+//            Class[] uClassArray1 = new Class[0];
+//            this.getDynamicDataStoreComp = this.SecurityGuardManager.getDeclaredMethod("getDynamicDataStoreComp", uClassArray1);
+//            Object[] objArray1 = new Object[0];
+//            this.ddsComp = this.getDynamicDataStoreComp.invoke(this.sgMgr, objArray1);
+//            if (this.ddsComp == null) {
+//                return;
+//            }
+//            this.IDynamicDataStoreComponent = Class.forName("com.taobao.wireless.security.sdk.dynamicdatastore.IDynamicDataStoreComponent");
+//            uClassArray1 = new Class[]{String.class,String.class,Integer.TYPE};
+//            this.putStringDDpEx = this.IDynamicDataStoreComponent.getDeclaredMethod("putStringDDpEx", uClassArray1);
+//            uClassArray1 = new Class[]{String.class,Integer.TYPE};
+//            this.getStringDDpEx = this.IDynamicDataStoreComponent.getDeclaredMethod("getStringDDpEx", uClassArray1);
+//            uClassArray1 = new Class[]{String.class,Integer.TYPE};
+//            this.removeStringDDpEx = this.IDynamicDataStoreComponent.getDeclaredMethod("removeStringDDpEx", uClassArray1);
             this.init_ok = true;
             return;
         }catch(java.lang.Exception e7){
