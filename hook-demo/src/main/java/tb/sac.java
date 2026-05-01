@@ -27,11 +27,12 @@ public class sac {
     private static Boolean a(Context p0, String p1){
         int i = 1;
         try{
-            Class uClass = Class.forName("com.taobao.android.ab.api.ABGlobal");
-            Class[] uClassArray = new Class[]{Context.class,String.class};
-            Object[] objArray = new Object[]{p0,p1};
-            boolean b = ((Boolean)uClass.getDeclaredMethod("isFeatureOpened", uClassArray).invoke(uClass, objArray)).booleanValue();
-            return Boolean.valueOf(b);
+//            Class uClass = Class.forName("com.taobao.android.ab.api.ABGlobal");
+//            Class[] uClassArray = new Class[]{Context.class,String.class};
+//            Object[] objArray = new Object[]{p0,p1};
+//            boolean b = ((Boolean)uClass.getDeclaredMethod("isFeatureOpened", uClassArray).invoke(uClass, objArray)).booleanValue();
+//            return Boolean.valueOf(b);
+            return true;
         }catch(Throwable e10){
             e10.printStackTrace();
             return false;
