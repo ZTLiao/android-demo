@@ -1,5 +1,6 @@
 package com.example.hook_demo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,8 @@ import androidx.activity.ComponentActivity;
 
 import org.android.spdy.SpdyAgent;
 import org.android.spdy.SpdySession;
+import org.android.spdy.SpdySessionKind;
+import org.android.spdy.SpdyVersion;
 
 public class MainActivity2 extends ComponentActivity {
 
@@ -18,10 +21,6 @@ public class MainActivity2 extends ComponentActivity {
     private TextView simpleText;
 
     private Button submitRequestBtn;
-
-    private static SpdyAgent spdyAgent;
-
-    private static SpdySession spdySession;
 
     static {
 
@@ -34,12 +33,14 @@ public class MainActivity2 extends ComponentActivity {
         simpleText = findViewById(R.id.simpleText);
         submitRequestBtn = findViewById(R.id.submitRequestBtn);
         submitRequestBtn.setOnClickListener(v -> {
-            this.submitRequest();
+            this.submitRequest(this.getApplicationContext());
         });
     }
 
-    private void submitRequest() {
+    private void submitRequest(Context context) {
         try {
+            SpdyAgent spdyAgent = SpdyAgent.getInstance(context, SpdyVersion.SPDY3, SpdySessionKind.NONE_SESSION);
+            spdyAgent.switchAccsServer(1);
 //            long spdyAgentPtr = spdyAgent.initAgent(0, 1, 0);
 //            Log.i(TAG, "spdyAgentPtr : " + spdyAgentPtr);
 //            int result = spdySession.submitRequestN(
