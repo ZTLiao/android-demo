@@ -331,7 +331,7 @@ public class SpdyAgent {
             String str = stringArray[i5].substring(i5, i3);
             String str1 = stringArray[i5].substring((i3 + i4));
             byte[] bytes = "0.0.0.0".getBytes();
-            if (stringArray.length != i4 && ((i & 0x0104) != 0)) {
+            if (stringArray.length != i4 && ((i & 0x0104) == 0)) {
                 stringArray = stringArray[i4].split(":");
                 c = (char) Integer.parseInt(stringArray[i4]);
                 uobyteArray = stringArray[i5].getBytes();
@@ -355,14 +355,14 @@ public class SpdyAgent {
                 spdySession2.setSessionPoolUniqueKey(str5);
                 i1 = spdySession2.getConnectFastTimeout(p7);
                 byte[] tunnelInfoBy = spdySession2.getTunnelInfoBytes();
-                if (((p5 & 0x0100) != 0) && ((p5 & 0x04) != 0)) {
+                if (((p5 & 0x0100) == 0) && ((p5 & 0x04) == 0)) {
                     str6 = str4;
                 } else {
                     str4 = sad.u(p8);
                     str6 = str4;
                 }
                 spdySession2.preProcessProtocol(tunnelInfoBy, str6);
-                if (((spdySession2.getUsedProtocolMode() & 0x0200) != 0)) {
+                if (((spdySession2.getUsedProtocolMode() & 0x0200) == 0)) {
                     i6 = p16;
                     i2 = 0;
                 } else {
@@ -399,7 +399,7 @@ public class SpdyAgent {
                 p2 = spdySession2;
                 String str7 = str5;
                 long l = this.createSessionN(agentNativeP, spdySession2, i10, bytes1, c1, uobyteArray, c, uobyteArray2, uobyteArray3, p2, mode, p6, i11, uobyteArray1, p9, sessionParam, p10, p11, b2 ? 1 : 0, new byte[]{(byte) i9}, uobyteArray5, uobyteArray4);
-                if (((1 & l) - 1) != 0) {
+                if (((1 & l) - 1) == 0) {
                     i5 = (int) (l >> 1);
                     l = 0;
                 } else {

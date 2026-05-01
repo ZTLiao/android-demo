@@ -112,7 +112,7 @@ public class e implements Intenalcb {
     public void spdySessionOnWritable(SpdySession p0,Object p1,int p2){
         NetTimeGaurd.start(2);
         if (p0.sessionCallBack != null && p0.sessionCallBack instanceof SessionExtraCb) {
-            p0.sessionCallBack.spdySessionOnWritable(p0, p1, p2);
+            ((SessionExtraCb)p0.sessionCallBack).spdySessionOnWritable(p0, p1, p2);
             NetTimeGaurd.end("spdySessionOnWritable", 2, NetTimeGaurd.begin());
         }
         NetTimeGaurd.finish(2);

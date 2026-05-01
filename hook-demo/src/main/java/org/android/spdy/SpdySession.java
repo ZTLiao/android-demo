@@ -406,7 +406,7 @@ public class SpdySession {
     }
     public boolean isMultiPathMode(){
         int i = 0;
-        if(((this.mode & 0x0800)) != 0 && ((this.mUsedProtocolMode & 0x0800)) != 0){
+        if(((this.mode & 0x0800)) == 0 && ((this.mUsedProtocolMode & 0x0800)) == 0){
             return false;
         }else {
             return true;
@@ -414,7 +414,7 @@ public class SpdySession {
     }
     public boolean isQUIC(){
         int i = 0;
-        if(!this.isHTTP3() && ((this.mode & 0x04)) != 0){
+        if(!this.isHTTP3() && ((this.mode & 0x04)) == 0){
             return false;
         }else {
             return true;
