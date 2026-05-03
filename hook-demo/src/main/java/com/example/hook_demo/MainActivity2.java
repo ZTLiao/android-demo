@@ -45,7 +45,7 @@ public class MainActivity2 extends ComponentActivity {
             SpdyAgent spdyAgent = SpdyAgent.getInstance(context, SpdyVersion.SPDY3, SpdySessionKind.NONE_SESSION);
             spdyAgent.switchAccsServer(1);
             //
-            SessionInfo sessionInfo = new SessionInfo("2409:8c54:b010:3:3:0:0:3d6", 80, "https://hudong.alicdn.com_21646297", null, 0, 1777769554329L, new SessionCb() {
+            SessionInfo sessionInfo = new SessionInfo("2409:8c54:b010:3:3:0:0:3d6", 80, "https://hudong.alicdn.com_21646297", null, 0, System.currentTimeMillis(), new SessionCb() {
                 @Override
                 public void bioPingRecvCallback(SpdySession p0, int p1) {
                     Log.i(TAG, "bioPingRecvCallback p0 :" + p0 + ", p1 :" + p1);
@@ -54,9 +54,10 @@ public class MainActivity2 extends ComponentActivity {
                 @Override
                 public byte[] getSSLMeta(SpdySession p0) {
                     Log.i(TAG, "getSSLMeta p0 :" + p0);
-                    return new byte[] {
-                            (byte) -124, (byte) -33, (byte) -10, (byte) 105, 0, 0, 0, 0, (byte) 116, 0, 0, 0, 0, 0, 56, 64, 1, 0, 26, 0, 9, 0, (byte) 114, 0, (byte) 87, 0, 42, 0, (byte) -114, 0, (byte) -37, 0, (byte) -18, (byte) -104, (byte) -61, (byte) 117, (byte) 83, (byte) 78, (byte) -86, (byte) -45, (byte) 81, (byte) -90, 0, (byte) 127, (byte) -75, 56, (byte) -83, (byte) -125, 11, 42, 47, (byte) 102, (byte) -112, 55, 9, 20, (byte) -15, 40, (byte) 82, (byte) -90, (byte) -59, (byte) 110, 35, (byte) -92, 2, (byte) -29, (byte) -67, (byte) -41, (byte) -81, (byte) 108, (byte) 76, 35, 26, (byte) -48, (byte) 115, (byte) -33, (byte) -20, 67, 50, (byte) -100, (byte) -104, (byte) -73, 14, (byte) -109, 15, (byte) 92, (byte) 76, (byte) -18, (byte) -27, (byte) 81, (byte) 113, 31, (byte) -110, 68, (byte) 126, (byte) 122, 8, (byte) 104, (byte) -22, (byte) 76, (byte) 94, (byte) 104, (byte) -91, (byte) -102, (byte) 108, (byte) -92, (byte) 111, (byte) -102, (byte) -7, 37, 69, 9, 53, (byte) -99, (byte) -12, 46, (byte) -72, 36, 8, (byte) 124, (byte) 123, (byte) -127, (byte) -64, (byte) -104, 69, (byte) 98, 39, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte) -107, 33, 37, 49, 46, 10, (byte) -42, (byte) 110, 5, (byte) 118, (byte) 88, (byte) -98, (byte) 121, (byte) -109, (byte) -118, (byte) -33, (byte) -28, (byte) -5, (byte) 92, (byte) -61, 17, (byte) -84, (byte) -127, 59, (byte) -9, (byte) -124, (byte) -57, 13, (byte) -69, 1, (byte) -22, (byte) -10, 0, 0, 0, 0
-                    };
+                    return new byte[0];
+//                    return new byte[] {
+//                            (byte) -124, (byte) -33, (byte) -10, (byte) 105, 0, 0, 0, 0, (byte) 116, 0, 0, 0, 0, 0, 56, 64, 1, 0, 26, 0, 9, 0, (byte) 114, 0, (byte) 87, 0, 42, 0, (byte) -114, 0, (byte) -37, 0, (byte) -18, (byte) -104, (byte) -61, (byte) 117, (byte) 83, (byte) 78, (byte) -86, (byte) -45, (byte) 81, (byte) -90, 0, (byte) 127, (byte) -75, 56, (byte) -83, (byte) -125, 11, 42, 47, (byte) 102, (byte) -112, 55, 9, 20, (byte) -15, 40, (byte) 82, (byte) -90, (byte) -59, (byte) 110, 35, (byte) -92, 2, (byte) -29, (byte) -67, (byte) -41, (byte) -81, (byte) 108, (byte) 76, 35, 26, (byte) -48, (byte) 115, (byte) -33, (byte) -20, 67, 50, (byte) -100, (byte) -104, (byte) -73, 14, (byte) -109, 15, (byte) 92, (byte) 76, (byte) -18, (byte) -27, (byte) 81, (byte) 113, 31, (byte) -110, 68, (byte) 126, (byte) 122, 8, (byte) 104, (byte) -22, (byte) 76, (byte) 94, (byte) 104, (byte) -91, (byte) -102, (byte) 108, (byte) -92, (byte) 111, (byte) -102, (byte) -7, 37, 69, 9, 53, (byte) -99, (byte) -12, 46, (byte) -72, 36, 8, (byte) 124, (byte) 123, (byte) -127, (byte) -64, (byte) -104, 69, (byte) 98, 39, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte) -107, 33, 37, 49, 46, 10, (byte) -42, (byte) 110, 5, (byte) 118, (byte) 88, (byte) -98, (byte) 121, (byte) -109, (byte) -118, (byte) -33, (byte) -28, (byte) -5, (byte) 92, (byte) -61, 17, (byte) -84, (byte) -127, 59, (byte) -9, (byte) -124, (byte) -57, 13, (byte) -69, 1, (byte) -22, (byte) -10, 0, 0, 0, 0
+//                    };
                 }
 
                 @Override
