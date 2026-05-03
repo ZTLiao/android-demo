@@ -12,10 +12,16 @@ import androidx.activity.ComponentActivity;
 import org.android.spdy.SessionCb;
 import org.android.spdy.SessionInfo;
 import org.android.spdy.SpdyAgent;
+import org.android.spdy.SpdyByteArray;
 import org.android.spdy.SpdySession;
 import org.android.spdy.SpdySessionKind;
+import org.android.spdy.SpdyStreamContext;
 import org.android.spdy.SpdyVersion;
+import org.android.spdy.Spdycb;
 import org.android.spdy.SuperviseConnectInfo;
+import org.android.spdy.SuperviseData;
+
+import java.util.Map;
 
 public class MainActivity2 extends ComponentActivity {
 
@@ -44,8 +50,7 @@ public class MainActivity2 extends ComponentActivity {
         try {
             SpdyAgent spdyAgent = SpdyAgent.getInstance(context, SpdyVersion.SPDY3, SpdySessionKind.NONE_SESSION);
             spdyAgent.switchAccsServer(1);
-            //
-            SessionInfo sessionInfo = new SessionInfo("2409:8c54:b010:3:3:0:0:3d6", 80, "https://hudong.alicdn.com_21646297", null, 0, System.currentTimeMillis(), new SessionCb() {
+            SessionCb sessionCb = new SessionCb() {
                 @Override
                 public void bioPingRecvCallback(SpdySession p0, int p1) {
                     Log.i(TAG, "bioPingRecvCallback p0 :" + p0 + ", p1 :" + p1);
@@ -95,7 +100,8 @@ public class MainActivity2 extends ComponentActivity {
                 public void spdySessionFailedError(SpdySession p0, int p1, Object p2) {
                     Log.i(TAG, "spdySessionFailedError p0 :" + p0 + ", p1 :" + p1 + ", p2 :" + p2);
                 }
-            }, 4232);
+            };
+            SessionInfo sessionInfo = new SessionInfo("2409:8c54:b010:3:3:0:0:3d6", 80, "https://hudong.alicdn.com_21646297", null, 0, System.currentTimeMillis(), sessionCb, 4232);
             sessionInfo.setConnectionTimeoutMs(6000);
             sessionInfo.setConnectIndex(0);
             sessionInfo.setMultiPathCompensateEnable(true);
@@ -103,22 +109,55 @@ public class MainActivity2 extends ComponentActivity {
             sessionInfo.setPubKeySeqNum(1);
             sessionInfo.setTryForceCellular(false);
             SpdySession spdySession = spdyAgent.createSession(sessionInfo);
-            int result = spdySession.submitRequestN(
-                    487600548928L,
-                    "https://hudong.alicdn.com/api/data/v2/15b808d1dfa24b65a8bad0d2df922638.js",
-                    (byte) 3,
-                    new String[]{":host","hudong.alicdn.com",":path","/api/data/v2/15b808d1dfa24b65a8bad0d2df922638.js",":method","GET",":scheme","https",":version","HTTP/1.1"},
-                    new byte[0],
-                    true,
-                    1,
-                    -1,
-                    7200,
-                    0,
-                    0
-            );
-            String text = "crack submitRequestN result : " + result;
-            simpleText.setText(text);
-            Log.i(TAG, text);
+            spdySession.putSpdyStreamCtx(new SpdyStreamContext(sessionCb, new Spdycb() {
+                @Override
+                public void spdyDataChunkRecvCB(SpdySession p0, boolean p1, long p2, SpdyByteArray p3, Object p4) {
+                    Log.i(TAG, "spdyDataChunkRecvCB");
+                }
+
+                @Override
+                public void spdyDataRecvCallback(SpdySession p0, boolean p1, long p2, int p3, Object p4) {
+                    Log.i(TAG, "spdyDataRecvCallback");
+                }
+
+                @Override
+                public void spdyDataSendCallback(SpdySession p0, boolean p1, long p2, int p3, Object p4) {
+                    Log.i(TAG, "spdyDataSendCallback");
+                }
+
+                @Override
+                public void spdyOnStreamResponse(SpdySession p0, long p1, Map p2, Object p3) {
+                    Log.i(TAG, "spdyOnStreamResponse");
+                }
+
+                @Override
+                public void spdyRequestRecvCallback(SpdySession p0, long p1, Object p2) {
+                    Log.i(TAG, "spdyRequestRecvCallback");
+                }
+
+                @Override
+                public void spdyStreamCloseCallback(SpdySession p0, long p1, int p2, Object p3, SuperviseData p4) {
+                    Log.i(TAG, "spdyStreamCloseCallback");
+                }
+            }));
+            if (spdySession.pptr4sessionNativePtr.a()) {
+                int result = spdySession.submitRequestN(
+                        487600548928L,
+                        "https://hudong.alicdn.com/api/data/v2/15b808d1dfa24b65a8bad0d2df922638.js",
+                        (byte) 3,
+                        new String[]{":host","hudong.alicdn.com",":path","/api/data/v2/15b808d1dfa24b65a8bad0d2df922638.js",":method","GET",":scheme","https",":version","HTTP/1.1"},
+                        new byte[0],
+                        true,
+                        1,
+                        -1,
+                        7200,
+                        0,
+                        0
+                );
+                String text = "crack submitRequestN result : " + result;
+                simpleText.setText(text);
+                Log.i(TAG, text);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

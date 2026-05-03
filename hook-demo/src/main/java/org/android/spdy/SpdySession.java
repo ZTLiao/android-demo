@@ -37,7 +37,7 @@ public class SpdySession {
     private int mUsedProtocolMode;
     private int mode;
     public int options;
-    private  d pptr4sessionNativePtr;
+    public d pptr4sessionNativePtr;
     private int pubkey_seqnum;
     public int refcount;
     private String seq;
