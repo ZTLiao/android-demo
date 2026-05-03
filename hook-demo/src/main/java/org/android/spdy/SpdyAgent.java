@@ -523,7 +523,7 @@ public class SpdyAgent {
             i = 0;
         }
         SpdyAgent.r.unlock();
-        if (i != 0) {
+        if (i == 0) {
             if (spdySession != null) {
                 spdySession.increRefCount();
                 return spdySession;

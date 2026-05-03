@@ -194,7 +194,7 @@ public class SpdySession {
     private native int streamSendDataN(long p0,int p1,byte[] p2,int p3,int p4,boolean p5);
     private native int submitBioPingN(long p0);
     private native int submitPingN(long p0);
-    private native int submitRequestN(long p0,String p1,byte p2,String[] p3,byte[] p4,boolean p5,int p6,int p7,int p8,int p9,int p10);
+    public native int submitRequestN(long p0,String p1,byte p2,String[] p3,byte[] p4,boolean p5,int p6,int p7,int p8,int p9,int p10);
     public void checkWifiConsecutiveFailStatus(int p0){
         if(NetWorkStatusUtil.a()){
             if (p0 != -2003 && (p0 != -5004 && (!this.isTunnel() && p0 == -4993))) {
