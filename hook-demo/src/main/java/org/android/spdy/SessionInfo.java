@@ -104,7 +104,7 @@ public class SessionInfo {
         return this.sessionUserData;
     }
     public String getTunnelDomain(){
-        if(true){
+        if(false){
             return "tunnel.datagram.com";
         }else {
             return "test.xquic.com";
