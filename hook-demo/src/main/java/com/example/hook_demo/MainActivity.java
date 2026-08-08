@@ -47,7 +47,18 @@ public class MainActivity extends ComponentActivity {
             Object result = printfMethod.invoke(null);
             assert result != null;
             Log.e("Hook Demo", result.toString());
+            testClassLoader();
         } catch (Exception ignored) {}
+    }
+
+    public static void testClassLoader() {
+        ClassLoader thisClassLoader = MainActivity.class.getClassLoader();
+        Log.e("Hook Demo", thisClassLoader.toString());
+        ClassLoader parentClassLoader = thisClassLoader.getParent();
+        while (parentClassLoader != null) {
+            Log.e("Hook Demo", parentClassLoader.toString() + " this : " + thisClassLoader.getParent().toString());
+            parentClassLoader = parentClassLoader.getParent();
+        }
     }
 
     public native String stringFromJNI();
