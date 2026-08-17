@@ -23,7 +23,7 @@ ifeq ($(OS),Windows_NT)
     NDK_PATH := /cygdrive/c/Program Files (x86)/Android/AndroidNDK/android-ndk-r23c/toolchains/llvm/prebuilt/windows-x86_64
     CC       := $(NDK_PATH)/bin/clang
 else
-    NDK_PATH := /root/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64
+    NDK_PATH := /root/Android/Sdk/ndk/30.0.15729638/toolchains/llvm/prebuilt/linux-x86_64
     CC       := $(NDK_PATH)/bin/clang
 endif
 
