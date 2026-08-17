@@ -32,8 +32,7 @@ hello_arm:
 	$(NDK_PATH)/bin/clang -target armv7a-linux-androideabi31 -E hello_arm.c -o hello_arm.i
 	$(NDK_PATH)/bin/clang -target armv7a-linux-androideabi31 -S hello_arm.i -o hello_arm.s
 	$(NDK_PATH)/bin/clang -target armv7a-linux-androideabi31 -c hello_arm.c -o hello_arm.o
-	# 只改这一行：添加 -pie -fPIE 和 --no-android-relocs
-	$(NDK_PATH)/bin/clang -target armv7a-linux-androideabi31 -fPIE -pie -Wl,--no-android-relocs hello_arm.o -o hello_arm
+	$(NDK_PATH)/bin/clang -target armv7a-linux-androideabi31 -fPIE -pie hello_arm.o -o hello_arm
 
 add:
 	export PATH="$$PATH:$(NDK_PATH)/bin"
