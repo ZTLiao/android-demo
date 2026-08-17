@@ -33,6 +33,9 @@ hello_arm:
 	$(NDK_PATH)/bin/clang -target armv7a-linux-androideabi31 -S hello_arm.i -o hello_arm.s
 	$(NDK_PATH)/bin/clang -target armv7a-linux-androideabi31 -c hello_arm.c -o hello_arm.o
 	$(NDK_PATH)/bin/clang -target armv7a-linux-androideabi31 -fPIE -pie hello_arm.o -o hello_arm
+	adb push hello_arm /data/local/tmp/hello_arm
+	adb shell chmod +x /data/local/tmp/hello_arm
+	adb shell /data/local/tmp/hello_arm	
 
 add:
 	export PATH="$$PATH:$(NDK_PATH)/bin"
