@@ -32,7 +32,7 @@ hello_arm:
 	$(NDK_PATH)/bin/clang -target aarch64-linux-android31 -E hello_arm.c -o hello_arm.i
 	$(NDK_PATH)/bin/clang -target aarch64-linux-android31 -S hello_arm.i -o hello_arm.s
 	$(NDK_PATH)/bin/clang -target aarch64-linux-android31 -c hello_arm.c -o hello_arm.o
-	$(NDK_PATH)/bin/clang -target aarch64-linux-android31 -fPIE -pie hello_arm.o -o hello_arm
+	$(NDK_PATH)/bin/clang -target aarch64-linux-android31 hello_arm.o -o hello_arm
 	adb push hello_arm /data/local/tmp/hello_arm
 	adb shell chmod +x /data/local/tmp/hello_arm
 	adb shell /data/local/tmp/hello_arm	
