@@ -29,7 +29,7 @@ else
     CC       := $(NDK_PATH)/bin/clang
 endif
 
-TARGET := aarch64-linux-android31
+TARGET := armv7a-linux-androideabi31
 
 # Android has required PIE executables since API 21; lld is the NDK's only
 # supported linker.
