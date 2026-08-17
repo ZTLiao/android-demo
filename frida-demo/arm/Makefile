@@ -4,10 +4,9 @@ else
     NDK_PATH := /root/Android/Sdk/ndk/30.0.15729638/toolchains/llvm/prebuilt/linux-x86_64
 endif
 
-# 通用编译设置
+# 通用编译设置 - 使用NDK官方推荐方式
 TARGET = armv7a-linux-androideabi31
-SYSROOT = $(NDK_PATH)/sysroot
-CLANG = clang -target $(TARGET) --sysroot=$(SYSROOT) -isystem $(SYSROOT)/usr/include/arm-linux-androideabi
+CLANG = clang --target=$(TARGET) --gcc-toolchain=$(NDK_PATH) --sysroot=$(NDK_PATH)/sysroot -D__ANDROID_API__=31
 
 hello.i:
 	export PATH="$$PATH:$(NDK_PATH)/bin" && \
