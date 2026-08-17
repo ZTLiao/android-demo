@@ -27,6 +27,14 @@ hello:
 	clang -target armv7a-linux-androideabi31 -c add.c -o add.o && \
 	clang -target armv7a-linux-androideabi31 add.o hello.o -o hello
 
+hello_arm:
+	export PATH="$$PATH:$(NDK_PATH)/bin" && \
+	clang -target armv7a-linux-androideabi31 -E hello_arm.c -o hello_arm.i && \
+	clang -target armv7a-linux-androideabi31 -S hello_arm.i -o hello_arm.s && \
+	clang -target armv7a-linux-androideabi31 -c hello_arm.c -o hello_arm.o && \
+	clang -target armv7a-linux-androideabi31 hello_arm.o -o hello_arm
+
+
 add:
 	export PATH="$$PATH:$(NDK_PATH)/bin" && \
 	clang -target armv7a-linux-androideabi31 -c add.c -o add.o
@@ -43,4 +51,4 @@ all:
 	adb shell /data/local/tmp/hello
 
 clear:
-	rm -rf *.i *.s *.o hello
+	rm -rf *.i *.s *.o hello hello_arm
