@@ -14,10 +14,12 @@
 #    then verify with:   make check
 #
 # 2) "unused DT entry: type 0x6fffe000/.../0x6fffe003" + Segmentation fault (on device)
-#    That binary was built with a plain cross-gcc (not the NDK). The Android
-#    linker does not process the DT_ANDROID_REL entries such a toolchain emits,
-#    relocations stay unapplied and the program crashes. Use the NDK clang/lld
-#    (this Makefile); for maximum device compatibility also -static is provided.
+#    Those tags are Android packed relocations (DT_ANDROID_REL) which modern
+#    NDK lld emits by default. This device's linker is too old (Android < 6.0)
+#    to process them, so relocations are never applied and the program
+#    segfaults. Fix: link with --pack-dyn-relocs=none (emit plain DT_RELA)
+#    or, for maximum compatibility, use a fully static binary
+#    (make run_static), which does not touch the device linker at all.
 
 ifeq ($(OS),Windows_NT)
     NDK_PATH := /cygdrive/c/Program Files (x86)/Android/AndroidNDK/android-ndk-r23c/toolchains/llvm/prebuilt/windows-x86_64
@@ -31,8 +33,11 @@ TARGET := aarch64-linux-android31
 
 # Android has required PIE executables since API 21; lld is the NDK's only
 # supported linker.
+# --pack-dyn-relocs=none / -z nopack-relative-relocs: use plain DT_RELA
+# instead of Android packed relocs, so old (< Android 6.0) device linkers
+# can apply them instead of crashing.
 CFLAGS  := --target=$(TARGET) -fPIE
-LDFLAGS := -fuse-ld=lld -pie
+LDFLAGS := -fuse-ld=lld -pie -Wl,--pack-dyn-relocs=none -Wl,-z,nopack-relative-relocs
 
 .PHONY: check hello hello_arm hello_arm_static add all run run_static clean
 
