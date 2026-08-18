@@ -69,6 +69,20 @@ hello_arm_static:      # fully static binary, avoids the device linker entirely
 	$(CC) $(CFLAGS) -c hello_arm.c -o hello_arm_s.o
 	$(CC) -fuse-ld=lld -static hello_arm_s.o -o hello_arm_static
 
+hello_arm_2:
+	$(CC) $(CFLAGS) -c hello_arm_2.s -o hello_arm_2.o
+	$(CC) $(CFLAGS) $(LDFLAGS) hello_arm_2.o -o hello_arm_2
+	adb push hello_arm_2 /data/local/tmp/hello_arm_2
+	adb shell chmod +x /data/local/tmp/hello_arm_2
+	adb shell /data/local/tmp/hello_arm_2
+
+arm_open:
+	$(CC) $(CFLAGS) -c arm_open.s -o arm_open.o
+	$(CC) $(CFLAGS) $(LDFLAGS) arm_open.o -o arm_open
+	adb push arm_open /data/local/tmp/arm_open /data/local/tmp/test.txt 123456
+	adb shell chmod +x /data/local/tmp/arm_open
+	adb shell /data/local/tmp/arm_open	
+
 add:
 	$(CC) $(CFLAGS) -c add.c -o add.o
 
