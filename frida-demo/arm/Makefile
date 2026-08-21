@@ -22,11 +22,13 @@
 #    (make run_static), which does not touch the device linker at all.
 
 ifeq ($(OS),Windows_NT)
-    NDK_PATH := /cygdrive/c/Program Files (x86)/Android/AndroidNDK/android-ndk-r23c/toolchains/llvm/prebuilt/windows-x86_64
+    NDK_PATH := /cygdrive/c/Program\ Files\ \(x86\)/Android/AndroidNDK/android-ndk-r23c/toolchains/llvm/prebuilt/windows-x86_64
     CC       := $(NDK_PATH)/bin/clang
+	CPP      := $(NDK_PATH)/bin/clang++
 else
     NDK_PATH := /root/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64
     CC       := $(NDK_PATH)/bin/clang
+	CPP      := $(NDK_PATH)/bin/clang++
 endif
 
 TARGET := aarch64-linux-android31
@@ -43,6 +45,7 @@ LDFLAGS := -fuse-ld=lld -pie -Wl,--pack-dyn-relocs=none -Wl,-z,nopack-relative-r
 
 check:                 # verify the NDK toolchain can actually run its linker
 	@echo "CC       = $(CC)"
+	@echo "CPP      = $(CPP)"
 	@echo "NDK_PATH = $(NDK_PATH)"
 	file -L $(NDK_PATH)/bin/ld.lld
 	$(CC) -fuse-ld=lld -Wl,--version
@@ -82,6 +85,47 @@ arm_open:
 	adb push arm_open /data/local/tmp/arm_open /data/local/tmp/test.txt 123456
 	adb shell chmod +x /data/local/tmp/arm_open
 	adb shell /data/local/tmp/arm_open	
+
+thumb4.s:
+	$(CC) $(CFLAGS) -mthumb -S 4.c -o 4.s -O3
+
+arm64.s:
+	$(CPP) $(CFLAGS) -S arm64.cpp -o arm64.s
+
+5_datatype.s:
+	$(CC) $(CFLAGS) -S 5_datatype.c -o 5_datatype.s
+
+5_2.s:
+	$(CC) $(CFLAGS) -S 5_2.c -o 5_2.s	
+
+5_3_goto.s:
+	$(CC) $(CFLAGS) -S 5_3_goto.c -o 5_3_goto.s
+
+5_3_ifelse.s:
+	$(CC) $(CFLAGS) -S 5_3_ifelse.c -o 5_3_ifelse.s	
+
+5_3_switch.s:
+	$(CC) $(CFLAGS) -S 5_3_switch.c -o 5_3_switch.s	
+
+5_4_for.s:
+	$(CC) $(CFLAGS) -S 5_4_for.c -o 5_4_for.s	
+
+5_4_while.s:
+	$(CC) $(CFLAGS) -S 5_4_while.c -o 5_4_while.s	
+
+5_4_do_while.s:
+	$(CC) $(CFLAGS) -S 5_4_do_while.c -o 5_4_do_while.s		
+
+6_function.s:
+	$(CC) $(CFLAGS) -S 6_function.c -o 6_function.s	
+	$(CC) $(CFLAGS) -S 6_function.c -o 6_function
+	adb push 6_function /data/local/tmp/6_function
+	adb shell chmod +x /data/local/tmp/6_function
+	adb shell /data/local/tmp/6_function
+
+6_struct.s:
+	$(CC) $(CFLAGS) -S 6_struct.c -o 6_struct.s	
+	$(CC) $(CFLAGS) -S 6_struct.c -o 6_struct								
 
 add:
 	$(CC) $(CFLAGS) -c add.c -o add.o
