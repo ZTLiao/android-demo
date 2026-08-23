@@ -36,23 +36,37 @@ public class MainActivity extends ComponentActivity {
         simpleBtn.setOnClickListener(v -> {
             startActivity(new Intent(this, MainActivity2.class));
         });
-        Teacher teacher1 = new Teacher();
-        Teacher teacher2 = new Teacher(2);
-        Teacher teacher3 = new Teacher(3, "tom3");
-        Teacher teacher4 = new Teacher(4, "tom4", false);
-        Log.i("hook-demo MainActivity", teacher1.toString());
-        Log.i("hook-demo MainActivity", teacher2.toString());
-        Log.i("hook-demo MainActivity", teacher3.toString());
-        Log.i("hook-demo MainActivity", teacher4.toString());
-        Teacher.Student student = new Teacher.Student();
-        Log.i("hook-demo MainActivity", student.toString());
-        Log.e("hook-demo", Teacher.getStr(teacher4));
-        LoadDex(this);
-        startActivityForFirstMethod(this);
-        startActivityForSecondMethod(this);
-        startActivityForThirdMethod(this);
-        replaceClassLoader(this);
+
+        String result1 = stringFromJNI();
+        Log.i("[hook demo] result1 = ", result1);
+
+        String filePath = MainActivity.this.getFilesDir() + "/test_asm.txt";
+        String result2 = readFile(filePath);
+        Log.i("[hook demo] result2 = ", result2);
+
+        try {
+            Teacher teacher1 = new Teacher();
+            Teacher teacher2 = new Teacher(2);
+            Teacher teacher3 = new Teacher(3, "tom3");
+            Teacher teacher4 = new Teacher(4, "tom4", false);
+            Log.i("hook-demo MainActivity", teacher1.toString());
+            Log.i("hook-demo MainActivity", teacher2.toString());
+            Log.i("hook-demo MainActivity", teacher3.toString());
+            Log.i("hook-demo MainActivity", teacher4.toString());
+            Teacher.Student student = new Teacher.Student();
+            Log.i("hook-demo MainActivity", student.toString());
+            Log.e("hook-demo", Teacher.getStr(teacher4));
+            LoadDex(this);
+            startActivityForFirstMethod(this);
+            startActivityForSecondMethod(this);
+            startActivityForThirdMethod(this);
+            replaceClassLoader(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    public native String readFile(String filePath);
 
     public static void setDexElementsInClassLoader(ClassLoader classLoader, Object dexElements) {
         try {

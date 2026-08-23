@@ -125,7 +125,11 @@ arm64.s:
 
 6_struct.s:
 	$(CC) $(CFLAGS) -S 6_struct.c -o 6_struct.s	
-	$(CC) $(CFLAGS) -S 6_struct.c -o 6_struct								
+	$(CC) $(CFLAGS) -S 6_struct.c -o 6_struct	
+
+7:
+	$(CPP) $(CFLAGS) -S 7.cpp -o 7.s -static-libstdc++	
+	$(CPP) $(CFLAGS) -S 7.cpp -o 7 -static-libstdc++									
 
 add:
 	$(CC) $(CFLAGS) -c add.c -o add.o
