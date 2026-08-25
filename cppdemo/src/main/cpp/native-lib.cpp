@@ -57,13 +57,81 @@ public:
 class NullClass {};
 
 class CBase {
+private:
+    static int staticValue;
     int a;
     char p;
 public:
     CBase(int a, char p): a(a), p(p) {
+        __android_log_print(4, "CPP11", "CBase(int a, char p) is called");
+    }
 
+    void setStaticValue(int value) {
+        staticValue = value;
     }
 };
+
+class Base {
+private :
+    int a;
+int b;
+public:
+//    Base(int a, int b): a(a), b(b) {
+//        __android_log_print(4, "CPP11", "Base(int a, int b) is called");
+//    }
+    virtual void f() {
+        __android_log_print(4, "CPP11", "base.f() is called");
+    }
+    virtual void g() {
+        __android_log_print(4, "CPP11", "base.g() is called");
+    }
+    virtual void h() {
+        __android_log_print(4, "CPP11", "base.h() is called");
+    }
+};
+
+class Base1 {
+public:
+    virtual void f() {
+        __android_log_print(4, "CPP11", "Base1.f() is called");
+    }
+};
+
+class Base2 {
+public:
+    virtual void f() {
+        __android_log_print(4, "CPP11", "Base2.f() is called");
+    }
+};
+
+class Base3 {
+public:
+    virtual void f() {
+        __android_log_print(4, "CPP11", "Base3.f() is called");
+    }
+};
+
+class Derived: public Base {
+public:
+    virtual void f1() {
+        __android_log_print(4, "CPP11", "derived.f1() is called");
+    }
+    virtual void g1() {
+        __android_log_print(4, "CPP11", "derived.g1() is called");
+    }
+    virtual void h1() {
+        __android_log_print(4, "CPP11", "derived.h1() is called");
+    }
+};
+
+class FinalClass: Base1, Base2, Base3 {
+public:
+    virtual void f() {
+        __android_log_print(4, "CPP11", "FinalClass.f() is called");
+    }
+};
+
+int CBase::staticValue = 20;
 
 extern "C"
 JNIEXPORT jstring JNICALL
@@ -222,7 +290,7 @@ Java_com_example_cppdemo_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
     NullClass nullClass;
     __android_log_print(4, "CPP11", "sizeof(NullClass) : %d, sizeof(nullClass) : %d", sizeof(NullClass), sizeof(nullClass));
 
-    CBase cbase;
+    CBase cbase(10, 2);
     __android_log_print(4, "CPP11", "sizeof(cbase) : %d", sizeof(cbase));
     void *cbase_ptr = &cbase;
     unsigned char *tmpptr = (unsigned char *)cbase_ptr;
@@ -230,5 +298,47 @@ Java_com_example_cppdemo_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
         unsigned char value = *(tmpptr + i);
         __android_log_print(4, "CPP11", "i : %d, value : %d", i, value);
     }
+    typedef void (*Func)(void *);
+    Base base;
+    __android_log_print(4, "CPP11", "sizeof(base) : %d", sizeof(base));
+    base.f();
+    base.g();
+    base.h();
+    tmpptr = (unsigned char *) &base;
+    for (int i = 0; i < sizeof(base); i++) {
+        unsigned char value = *(tmpptr + i);
+        __android_log_print(4, "CPP11", "i : %d, value : %d", i, value);
+    }
+    unsigned long vtableptr = *(unsigned long *) &base;
+    unsigned long ffuncaddr = *(unsigned long *) vtableptr;
+    Func ffunc = reinterpret_cast<Func>(ffuncaddr);
+    ffunc(&base);
+
+    unsigned long gfuncaddr = *(unsigned long *) (vtableptr + sizeof(void *));
+    unsigned long hfuncaddr = *(unsigned long *) (vtableptr + sizeof(void *) * 2);
+    Func gfunc = reinterpret_cast<Func>(gfuncaddr);
+    Func hfunc = reinterpret_cast<Func>(hfuncaddr);
+    gfunc(&base);
+    hfunc(&base);
+
+    Derived derived;
+    __android_log_print(4, "CPP11", "sizeof(derived) : %d", sizeof(derived));
+    vtableptr = *(unsigned long *) &derived;
+    unsigned long f1funcaddr = *(unsigned long *) (vtableptr);
+    unsigned long g1funcaddr = *(unsigned long *) (vtableptr + sizeof(void *));
+    unsigned long h1funcaddr = *(unsigned long *) (vtableptr + sizeof(void *) * 2);
+    Func f1func = reinterpret_cast<Func>(f1funcaddr);
+    Func g1func = reinterpret_cast<Func>(g1funcaddr);
+    Func h1func = reinterpret_cast<Func>(h1funcaddr);
+    f1func(&derived);
+    g1func(&derived);
+    h1func(&derived);
+
+    FinalClass finalClass;
+    __android_log_print(4, "CPP11", "sizeof(finalClass) : %d", sizeof(finalClass));
+    vtableptr = *((unsigned long *) &finalClass + 2);
+    unsigned long findClassfaddr = *(unsigned long *) (vtableptr + sizeof(void *) * 0);
+    Func finalClassfaddrf1func = reinterpret_cast<Func>(findClassfaddr);
+    finalClassfaddrf1func(&finalClass);
     return env->NewStringUTF(hello.c_str());
 }
