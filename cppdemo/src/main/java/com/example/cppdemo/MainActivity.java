@@ -17,6 +17,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         TextView tv = findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
+        new Thread(() -> {
+            while(true) {
+                stringFromJNI();
+            }
+        }).start();
     }
 
     public native String stringFromJNI();

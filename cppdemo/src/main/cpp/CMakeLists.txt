@@ -16,6 +16,7 @@ add_library( # Sets the name of the library.
         SHARED                                      # 动态库
         person.cpp
         student.cpp
+        Compute.cpp
         native-lib.cpp  # cpp代码文件路径 可以在下面接着随意添加c、c++文件
 )
 
