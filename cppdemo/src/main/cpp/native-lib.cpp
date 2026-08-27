@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <string>
 #include "android/log.h"
+#include <sys/time.h>
 
 #include "person.h"
 #include "student.h"
@@ -133,10 +134,7 @@ public:
 
 int CBase::staticValue = 20;
 
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_example_cppdemo_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
-    std::string hello = "hello from C++";
+void test_function() {
     bool boolValue = true;
     __android_log_print(4, "CPP11", "sizeof(pointer)->%d\n", sizeof(&boolValue));
     __android_log_print(4, "CPP11", "sizeof(bool)->%d\n", sizeof(bool));
@@ -340,5 +338,80 @@ Java_com_example_cppdemo_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
     unsigned long findClassfaddr = *(unsigned long *) (vtableptr + sizeof(void *) * 0);
     Func finalClassfaddrf1func = reinterpret_cast<Func>(findClassfaddr);
     finalClassfaddrf1func(&finalClass);
+}
+
+class DexFile {
+public:
+    DexFile(uint8_t * begin, size_t size, uint32_t locationChecksum)
+            : begin_(begin), size_(size), location_checksum_(locationChecksum) {
+
+    }
+
+    static const uint8_t kDexMagic[];
+    static constexpr size_t kNumDexVersions = 3;
+    static constexpr size_t kDexVersionLen = 4;
+    static const uint8_t kDexMagicVersions[kNumDexVersions][kDexVersionLen];
+    static constexpr size_t kSha1DigestSize = 20;
+    static constexpr uint32_t kDexEndianConstant = 0x12345678;
+    static const char* kClassesDex;
+    static const uint32_t kDexNoIndex = 0xFFFFFFFF;
+    static const uint16_t kDexNoIndex16 = 0xFFFF;
+    static constexpr char kMultiDexSeparator = ':';
+    virtual ~DexFile() {};
+public:
+    uint8_t *begin_;
+    size_t size_;
+    std::string location_;
+    uint32_t location_checksum_;
+};
+
+struct DexFileStruct {
+    void *vptr;
+    void *begin_;
+    uint32_t size;
+};
+
+struct ArtMethod {
+public:
+    uint32_t reference_;
+    std::atomic<std::uint32_t> access_flag_;
+    uint32_t idex_code;
+    uint32_t dex_method_index_;
+};
+
+void test_function1() {
+    DexFile dexFile(nullptr, 0, 0);
+    void* beginaddr = (void *) &(dexFile.begin_);
+    void* sizeaddr = (void *) &(dexFile.size_);
+    unsigned long dexfileaddr = reinterpret_cast<unsigned long>(&(dexFile));
+    unsigned long beginoffset = reinterpret_cast<unsigned long>(beginaddr) - reinterpret_cast<unsigned long>(dexfileaddr);
+    unsigned long sizeoffset = reinterpret_cast<unsigned long>(sizeaddr) - reinterpret_cast<unsigned long>(dexfileaddr);
+    __android_log_print(4, "CPP11", "beginoffset : %d, sizeoffset : %d", beginoffset, sizeoffset);
+}
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int sum(int m) {
+    int result = 0;
+    for (int i = 0; i < m; i++) {
+        result = add(result, i);
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_cppdemo_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
+    test_function();
+    test_function1();
+    struct timeval timestart, timeend;
+    gettimeofday(&timestart, nullptr);
+    int result = sum(1000);
+    gettimeofday(&timeend, nullptr);
+    unsigned long time = (timeend.tv_sec * 1000000 + timeend.tv_usec) - (timestart.tv_sec * 1000000 + timestart.tv_usec);
+    __android_log_print(4, "CPP11", "sum : %d, time : %ld", result, time);
+    std::string hello = "hello from C++";
     return env->NewStringUTF(hello.c_str());
 }
