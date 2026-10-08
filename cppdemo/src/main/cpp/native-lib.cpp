@@ -389,14 +389,45 @@ void test_function1() {
     __android_log_print(4, "CPP11", "beginoffset : %d, sizeoffset : %d", beginoffset, sizeoffset);
 }
 
-int add(int a, int b) {
+#define ALWAYS_INLINE __attribute__((always_inline))
+
+ALWAYS_INLINE int add(int a, int b) {
     return a + b;
+}
+
+ALWAYS_INLINE int sub(int a, int b) {
+    return a - b;
 }
 
 int sum(int m) {
     int result = 0;
     for (int i = 0; i < m; i++) {
         result = add(result, i);
+    }
+    return result;
+}
+
+#define _DWORD unsigned long
+typedef unsigned long (*GetObsoleteDexCache)(void*);
+
+extern "C"
+JNIEXPORT int getDexFileByArtMethod32(void* a1, GetObsoleteDexCache func) {
+    int result;
+    if (*((_DWORD *)a1 + 1) & 0x40000) {
+        result = *(_DWORD *) (func(a1) + 16);
+    } else {
+        result = *(_DWORD *) (*(_DWORD *) (*(_DWORD *) a1 + 16) + 16);
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT _DWORD getDexFileByArtMethod64(void* a1, GetObsoleteDexCache func) {
+    _DWORD result;
+    if (*((_DWORD *)a1 + 1) & 0x40000) {
+        result = *(_DWORD *) (func(a1) + 16);
+    } else {
+        result = *(_DWORD *) (*(_DWORD *) (*(_DWORD *) a1 + 0x10LL) + 0x10LL);
     }
     return result;
 }
@@ -408,10 +439,11 @@ Java_com_example_cppdemo_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz) {
     test_function1();
     struct timeval timestart, timeend;
     gettimeofday(&timestart, nullptr);
-    int result = sum(1000);
+    int result = sum(10000);
     gettimeofday(&timeend, nullptr);
     unsigned long time = (timeend.tv_sec * 1000000 + timeend.tv_usec) - (timestart.tv_sec * 1000000 + timestart.tv_usec);
     __android_log_print(4, "CPP11", "sum : %d, time : %ld", result, time);
+    result = sub(10, 9);
     std::string hello = "hello from C++";
     return env->NewStringUTF(hello.c_str());
 }
